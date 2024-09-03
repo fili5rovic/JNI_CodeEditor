@@ -7,8 +7,8 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import org.fxmisc.richtext.CodeArea?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="783.0" prefWidth="1160.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fili5rovic.jni_codeeditor.jni_codeeditor.controller.DashboardController">
    <children>
@@ -45,11 +45,7 @@
                         <TreeView fx:id="projectHierarchy" layoutX="-1.0" prefHeight="748.0" prefWidth="331.0" />
                      </children>
                   </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="729.0">
-                     <children>
-                        <CodeArea layoutY="1.0" prefHeight="748.0" prefWidth="783.0" />
-                     </children>
-                  </AnchorPane>
+                  <BorderPane fx:id="codeAreaPane" />
               </items>
             </SplitPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />

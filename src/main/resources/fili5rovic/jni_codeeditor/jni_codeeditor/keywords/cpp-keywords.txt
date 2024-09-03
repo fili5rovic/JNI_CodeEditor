@@ -1,0 +1,17 @@
+int,double,long,float,char,string,short,bool,
+void,unsigned,signed,constexpr,auto,volatile,
+
+public,private,protected,static,const,
+friend,inline,virtual,override,final,
+mutable,explicit,register,extern,
+
+class,struct,union,enum,typedef,namespace,
+include,define,template,typename,using
+
+new,delete,this,throw,try,catch,typeid,
+operator,return,if,else,switch,case,default,
+while,do,for,break,continue,goto,
+
+true,false,nullptr,
+
+cout,cin,endl,vector,map,set,list

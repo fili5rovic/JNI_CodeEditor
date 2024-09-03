@@ -6,6 +6,7 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.window.WindowHelper;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {

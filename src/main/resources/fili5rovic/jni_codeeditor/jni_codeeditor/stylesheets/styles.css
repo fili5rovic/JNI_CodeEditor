@@ -1,5 +1,6 @@
+/*region Coloring of Code Area*/
 .keyword {
-    -fx-fill: #0000ff;
+    -fx-fill: #ad5555;
     -fx-font-weight: bold;
 }
 
@@ -15,3 +16,4 @@
     -fx-fill: #808080;
     -fx-font-style: italic;
 }
+/*endregion*/
