@@ -71,7 +71,6 @@ public class DashboardController extends ControllerBase {
         }
     }
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Window.getWindowAt(Window.WINDOW_DASHBOARD).setController(this);
@@ -85,7 +84,5 @@ public class DashboardController extends ControllerBase {
         projectTreeManager = new ProjectTreeManager();
         dividerManager = new DividerManager();
     }
-
-
 
 }

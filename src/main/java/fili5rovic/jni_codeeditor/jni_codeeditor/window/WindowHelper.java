@@ -14,7 +14,7 @@ public class WindowHelper {
             if (i != position)
                 Window.getWindowAt(i).getStage().hide();
             else
-                showWindow(position);
+                Window.getWindowAt(i).getStage().show();
         }
     }
 

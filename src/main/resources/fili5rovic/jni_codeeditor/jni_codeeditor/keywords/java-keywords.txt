@@ -2,10 +2,10 @@ int,double,long,float,char,String,short,boolean,
 byte,void,Object,Class,Enum,Annotation,Record,
 
 public,private,protected,static,final,abstract,
-synchronized,volatile,transient,native,strictfp
+synchronized,volatile,transient,native,strictfp,
 
 class,interface,extends,implements,package,import,
-enum,module,record,throws
+enum,module,record,throws,
 
 super,this,instanceof,new,return,if,else,switch,
 case,default,while,do,for,break,continue,throw,
