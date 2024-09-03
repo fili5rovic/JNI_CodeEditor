@@ -22,16 +22,13 @@ public class FileHelper {
     }
 
     public static String[] getKeywordsForLanguage(Language language) {
-        InputStream inputStream = InputStream.nullInputStream();
+        String fileName = "";
         switch (language) {
-            case JAVA -> {
-                inputStream = FileHelper.class.getResourceAsStream("/fili5rovic/jni_codeeditor/jni_codeeditor/keywords/java-keywords.txt");
-            }
-            case CPP -> {
-                inputStream = FileHelper.class.getResourceAsStream("/fili5rovic/jni_codeeditor/jni_codeeditor/keywords/cpp-keywords.txt");
-            }
-
+            case JAVA -> fileName = "java-keywords.txt";
+            case CPP ->  fileName = "cpp-keywords.txt";
         }
+        String path = STR."/fili5rovic/jni_codeeditor/jni_codeeditor/keywords/\{fileName}";
+        InputStream inputStream = FileHelper.class.getResourceAsStream(path);
         String content = FileHelper.readFromFile(inputStream);
         String[] keywords = content.split(",");
         for(int i = 0; i < keywords.length; i++) {

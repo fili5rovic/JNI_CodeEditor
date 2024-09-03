@@ -14,30 +14,21 @@ import java.util.regex.Pattern;
 
 public class SmartCodeArea extends CodeArea {
 
-    static class SmartCodeAreaHighlighter {
+    class HighLighter {
         private final Pattern PATTERN;
 
-        SmartCodeAreaHighlighter(Language language) {
+        HighLighter(Language language) {
             String[] KEYWORDS = FileHelper.getKeywordsForLanguage(language);
-            String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
+            String KEYWORD_PATTERN = STR."\\b(\{String.join("|", KEYWORDS)})\\b";
             String PAREN_PATTERN = "[()]";
             String BRACE_PATTERN = "[{}]";
             String BRACKET_PATTERN = "[\\[\\]]";
             String SEMICOLON_PATTERN = ";";
             String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
             String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
-            PATTERN = Pattern.compile("(?<KEYWORD>" + KEYWORD_PATTERN + ")"
-                    + "|(?<PAREN>" + PAREN_PATTERN + ")"
-                    + "|(?<BRACE>" + BRACE_PATTERN + ")"
-                    + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
-                    + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
-                    + "|(?<STRING>" + STRING_PATTERN + ")"
-                    + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
-            );
+            PATTERN = Pattern.compile(STR."(?<KEYWORD>\{KEYWORD_PATTERN})|(?<PAREN>\{PAREN_PATTERN})|(?<BRACE>\{BRACE_PATTERN})|(?<BRACKET>\{BRACKET_PATTERN})|(?<SEMICOLON>\{SEMICOLON_PATTERN})|(?<STRING>\{STRING_PATTERN})|(?<COMMENT>\{COMMENT_PATTERN})");
 
-            for(String keyword : KEYWORDS) {
-                System.out.println(keyword);
-            }
+            SmartCodeArea.this.textProperty().addListener((obs, oldText, newText) -> highlighter.applyHighlighting(SmartCodeArea.this));
         }
 
 
@@ -58,19 +49,68 @@ public class SmartCodeArea extends CodeArea {
             spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
             return spansBuilder.create();
         }
+
+        private static String getString(Matcher matcher) {
+            String styleClass = matcher.group("KEYWORD") != null ? "keyword" :
+                    matcher.group("PAREN") != null ? "paren" : matcher.group("BRACE") != null ? "brace" :
+                            matcher.group("BRACKET") != null ? "bracket" :
+                                    matcher.group("SEMICOLON") != null ? "semicolon" :
+                                            matcher.group("STRING") != null ? "string" :
+                                                    matcher.group("COMMENT") != null ? "comment" :
+                                                            null; /* never happens */
+            assert styleClass != null;
+            return styleClass;
+        }
     }
 
-    private SmartCodeAreaHighlighter highlighter = null;
+    class FontManager {
+        private int currentFontSize;
+        private static final int DEFAULT_FONT_SIZE = 12;
+        private static final int MAX_FONT_SIZE = 40;
+        private static final int MIN_FONT_SIZE = 8;
 
-    private int currentFontSize;
-    private static final int DEFAULT_FONT_SIZE = 12;
-    private static final int MAX_FONT_SIZE = 40;
-    private static final int MIN_FONT_SIZE = 8;
+        FontManager(boolean shouldResizeOnScroll) {
+            currentFontSize = DEFAULT_FONT_SIZE;
+            if (shouldResizeOnScroll) {
+                scrollListener();
+            }
+        }
+
+        private void increaseFontSize() {
+            currentFontSize++;
+            currentFontSize = Math.min(currentFontSize, MAX_FONT_SIZE);
+        }
+
+        private void decreaseFontSize() {
+            currentFontSize--;
+            currentFontSize = Math.max(currentFontSize, MIN_FONT_SIZE);
+        }
+
+        private void scrollListener() {
+            SmartCodeArea.this.addEventFilter(ScrollEvent.SCROLL, (ScrollEvent event) -> {
+                if (event.isControlDown()) {
+                    changeFontSizeFromScroll(event);
+                    event.consume();
+                }
+            });
+        }
+
+        private void changeFontSizeFromScroll(ScrollEvent event) {
+            boolean scrollUp = event.getDeltaY() > 0;
+            if (scrollUp)
+                increaseFontSize();
+            else
+                decreaseFontSize();
+            SmartCodeArea.this.setStyle(STR."-fx-font-size: \{currentFontSize}px;");
+        }
+    }
+
+    private HighLighter highlighter = null;
+    private FontManager fontManager = null;
 
     public SmartCodeArea() {
         super();
         init();
-        listeners();
     }
 
     public SmartCodeArea(Language language) {
@@ -80,38 +120,12 @@ public class SmartCodeArea extends CodeArea {
 
 
     public void setLanguage(Language language) {
-        highlighter = new SmartCodeAreaHighlighter(language);
+        highlighter = new HighLighter(language);
     }
 
     private void init() {
-        textProperty().addListener((obs, oldText, newText) -> highlighter.applyHighlighting(this));
         setParagraphGraphicFactory(LineNumberFactory.get(this));
-        currentFontSize = DEFAULT_FONT_SIZE;
+        fontManager = new FontManager(true);
     }
 
-
-    private void listeners() {
-        this.addEventFilter(ScrollEvent.SCROLL, (ScrollEvent event) -> {
-            if (event.isControlDown()) {
-                boolean scrollUp = event.getDeltaY() > 0;
-                currentFontSize += scrollUp ? 1 : -1;
-                currentFontSize = Math.min(Math.max(currentFontSize, MIN_FONT_SIZE), MAX_FONT_SIZE);
-                setStyle("-fx-font-size: " + currentFontSize + "px;");
-                event.consume();
-            }
-        });
-    }
-
-
-    private static String getString(Matcher matcher) {
-        String styleClass = matcher.group("KEYWORD") != null ? "keyword" :
-                matcher.group("PAREN") != null ? "paren" : matcher.group("BRACE") != null ? "brace" :
-                        matcher.group("BRACKET") != null ? "bracket" :
-                                matcher.group("SEMICOLON") != null ? "semicolon" :
-                                        matcher.group("STRING") != null ? "string" :
-                                                matcher.group("COMMENT") != null ? "comment" :
-                                                        null; /* never happens */
-        assert styleClass != null;
-        return styleClass;
-    }
 }

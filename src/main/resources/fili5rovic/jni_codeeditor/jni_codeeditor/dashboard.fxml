@@ -33,12 +33,12 @@
       </MenuBar>
       <VBox layoutX="-3.0" layoutY="35.0" prefHeight="691.0" prefWidth="36.0">
          <children>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="39.0" text="d" />
+            <Button mnemonicParsing="false" onAction="#collapseProjectPaneBtnClicked" prefHeight="25.0" prefWidth="39.0" text="d" />
          </children>
       </VBox>
       <SplitPane dividerPositions="0.9302949061662198" layoutX="31.0" layoutY="35.0" orientation="VERTICAL" prefHeight="748.0" prefWidth="1115.0">
         <items>
-            <SplitPane dividerPositions="0.2884097035040431" prefHeight="457.0" prefWidth="1113.0">
+            <SplitPane fx:id="horizontalSplitPane" dividerPositions="0.2830188679245283" prefHeight="457.0" prefWidth="1113.0">
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>

@@ -4,14 +4,10 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.util.Language;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.SmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import org.fxmisc.richtext.CodeArea;
 
 
 import java.net.URL;
@@ -23,6 +19,9 @@ public class DashboardController extends ControllerBase {
     private TreeView<String> projectHierarchy;
     @FXML
     private BorderPane codeAreaPane;
+    @FXML
+    private SplitPane horizontalSplitPane;
+    private double nextDividerPosition = 0.0;
 
     private SmartCodeArea codeArea;
 
@@ -46,4 +45,15 @@ public class DashboardController extends ControllerBase {
     }
 
 
+    public void collapseProjectPaneBtnClicked() {
+        var divider = horizontalSplitPane.getDividers().getFirst();
+        if(nextDividerPosition == 0.0) {
+            nextDividerPosition = divider.getPosition();
+            divider.setPosition(0.0);
+        } else {
+            divider.setPosition(nextDividerPosition);
+            nextDividerPosition = 0.0;
+        }
+
+    }
 }
