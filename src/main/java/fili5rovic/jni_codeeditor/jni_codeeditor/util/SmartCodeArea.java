@@ -28,7 +28,7 @@ public class SmartCodeArea extends CodeArea {
             String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
             PATTERN = Pattern.compile(STR."(?<KEYWORD>\{KEYWORD_PATTERN})|(?<PAREN>\{PAREN_PATTERN})|(?<BRACE>\{BRACE_PATTERN})|(?<BRACKET>\{BRACKET_PATTERN})|(?<SEMICOLON>\{SEMICOLON_PATTERN})|(?<STRING>\{STRING_PATTERN})|(?<COMMENT>\{COMMENT_PATTERN})");
 
-            SmartCodeArea.this.textProperty().addListener((obs, oldText, newText) -> highlighter.applyHighlighting(SmartCodeArea.this));
+            SmartCodeArea.this.textProperty().addListener((_, _, _) -> highlighter.applyHighlighting(SmartCodeArea.this));
         }
 
 
@@ -102,6 +102,7 @@ public class SmartCodeArea extends CodeArea {
             else
                 decreaseFontSize();
             SmartCodeArea.this.setStyle(STR."-fx-font-size: \{currentFontSize}px;");
+//            SmartCodeArea.this.lookup(".lineno").setStyle(STR."-fx-font-size: \{currentFontSize}px;");
         }
     }
 

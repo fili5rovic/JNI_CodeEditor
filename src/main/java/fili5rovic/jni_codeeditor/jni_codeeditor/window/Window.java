@@ -2,6 +2,8 @@ package fili5rovic.jni_codeeditor.jni_codeeditor.window;
 
 
 import fili5rovic.jni_codeeditor.jni_codeeditor.controller.ControllerBase;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public abstract class Window {
@@ -25,7 +27,22 @@ public abstract class Window {
         }
     }
 
+    public void load(Stage stage,String resource, String title) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resource));
+            Scene scene = new Scene(fxmlLoader.load());
+            scene.getStylesheets().add(getClass().getResource("/fili5rovic/jni_codeeditor/jni_codeeditor/stylesheets/styles.css").toExternalForm());
+            stage.setTitle(title);
+            stage.setScene(scene);
+
+            this.stage = stage;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public abstract void init(Stage stage);
+
 
     //<editor-fold desc="Geteri i Seteri">
     public Stage getStage() {
