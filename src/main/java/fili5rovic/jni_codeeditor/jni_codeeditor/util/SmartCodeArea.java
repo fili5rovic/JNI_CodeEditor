@@ -1,6 +1,7 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -12,6 +13,7 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +25,10 @@ public class SmartCodeArea extends CodeArea {
 
     class HighLighter {
         private final Pattern PATTERN;
+        private Language language;
 
         HighLighter(Language language) {
+            this.language = language;
             String[] KEYWORDS = FileHelper.getKeywordsForLanguage(language);
             String KEYWORD_PATTERN = STR."\\b(\{String.join("|", KEYWORDS)})\\b";
             String PAREN_PATTERN = "[()]";
@@ -115,10 +119,7 @@ public class SmartCodeArea extends CodeArea {
             Font font = Font.font("Monospaced", currentFontSize);
             Text text = new Text("W");
             text.setFont(font);
-
-            double width = text.getLayoutBounds().getWidth();
-            System.out.println("Character width: " + width + " pixels");
-            return width;
+            return text.getLayoutBounds().getWidth();
         }
     }
 
@@ -144,6 +145,9 @@ public class SmartCodeArea extends CodeArea {
     }
 
     class CodeSuggestionsManager {
+
+        private String lastWord = "";
+        private int paragraphIndex = 0;
         CodeSuggestionsManager() {
             init();
         }
@@ -151,34 +155,60 @@ public class SmartCodeArea extends CodeArea {
         private void init() {
             listeners();
         }
+        private void suggest() {
+            codeSuggestionsPane.clearSuggestions();
 
-        private void addSuggestions(List<String> suggestions) {
-            codeSuggestionsPane.addSuggestions(suggestions);
+            String paragraph = SmartCodeArea.this.getParagraph(paragraphIndex).getText().substring(0, SmartCodeArea.this.getCaretColumn());
+            if(paragraph.trim().isEmpty())
+                return;
+            String[] words = paragraph.split(" ");
+            lastWord = words[words.length - 1];
+            String[] suggestions = FileHelper.getKeywordsForLanguage(SmartCodeArea.this.highlighter.language);
+            ArrayList<String> filteredSuggestions = new ArrayList<>();
+            for (String suggestion : suggestions) {
+                if (suggestion.startsWith(lastWord)) {
+                    filteredSuggestions.add(suggestion);
+                }
+            }
+
+            codeSuggestionsPane.addSuggestions(filteredSuggestions);
         }
 
         private void listeners() {
             SmartCodeArea.this.caretPositionProperty().addListener((observable, oldPosition, newPosition) -> {
-                int currentParagraph = SmartCodeArea.this.getCurrentParagraph();
-                int currentColumn = SmartCodeArea.this.getCaretColumn();
+                paragraphIndex = SmartCodeArea.this.getCurrentParagraph();
+                int currentColumn = SmartCodeArea.this.getParagraph(paragraphIndex).length();
 
                 double multiplier = fontManager.getCurrentFontWidth();
                 double xOffset = 35;
 
                 codeSuggestionsPane.setLayoutX(currentColumn * multiplier + xOffset);
-                codeSuggestionsPane.setLayoutY(currentParagraph * multiplier);
+                codeSuggestionsPane.setLayoutY(paragraphIndex * multiplier);
+                suggest();
             });
 
             SmartCodeArea.this.sceneProperty().addListener((observable, oldScene, newScene) -> {
                 if (newScene != null) {
                     if (SmartCodeArea.this.getParent() instanceof Pane parent) {
                         codeSuggestionsPane = new CodeSuggestionsPane();
-                        codeSuggestionsPane.addSuggestions(List.of("a", "b", "c"));
                         parent.getChildren().add(codeSuggestionsPane);
                     }
                 }
             });
+
+            SmartCodeArea.this.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+                if (event.getCode() == KeyCode.TAB && codeSuggestionsPane.hasSuggestions()) {
+                    event.consume();
+                    String suggestion = ((Label) codeSuggestionsPane.getChildren().getFirst()).getText();
+                    int caretPosition = SmartCodeArea.this.getCaretPosition();
+                    SmartCodeArea.this.replaceText(caretPosition - lastWord.length(), caretPosition, suggestion);
+                    System.out.println(suggestion);
+                    codeSuggestionsPane.clearSuggestions();
+                }
+            });
         }
     }
+
 
     private HighLighter highlighter = null;
     private FontManager fontManager = null;
@@ -198,10 +228,6 @@ public class SmartCodeArea extends CodeArea {
     public SmartCodeArea(Language language) {
         this();
         setLanguage(language);
-
-
-
-
     }
 
 
