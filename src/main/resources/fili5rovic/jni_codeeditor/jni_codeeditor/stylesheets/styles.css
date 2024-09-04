@@ -11,6 +11,10 @@
     -fx-text-fill: #656565;
 }
 
+.code-suggestion-selected {
+    -fx-background-color: rgba(91, 91, 91, 0.5);
+}
+
 .code-suggestion:hover, .code-suggestion:focused {
     -fx-background-color: rgba(91, 91, 91, 0.3);
 }
