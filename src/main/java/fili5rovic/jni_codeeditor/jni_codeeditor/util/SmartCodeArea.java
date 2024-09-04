@@ -1,20 +1,24 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.PopupControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Window;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -113,6 +117,16 @@ public class SmartCodeArea extends CodeArea {
             SmartCodeArea.this.setStyle(STR."-fx-font-size: \{currentFontSize}px;");
 //            SmartCodeArea.this.lookup(".lineno").setStyle(STR."-fx-font-size: \{currentFontSize}px;");
         }
+
+        public double getCurrentFontWidth() {
+            Font font = Font.font("Monospaced", currentFontSize);
+            Text text = new Text("W");
+            text.setFont(font);
+
+            double width = text.getLayoutBounds().getWidth();
+            System.out.println("Character width: " + width + " pixels");
+            return width;
+        }
     }
 
     static class TabManager {
@@ -136,37 +150,40 @@ public class SmartCodeArea extends CodeArea {
         }
     }
 
-    static class CodeSuggestionsManager {
-        private final PopupControl suggestionsPopup;
-        private final VBox suggestionBox; // You can use a ListView or other container
-
-        CodeSuggestionsManager(CodeArea codeArea) {
-            suggestionBox = new VBox();
-            suggestionsPopup = new PopupControl();
-            suggestionsPopup.getScene().setRoot(suggestionBox);
-
-            addSuggestionsForCurrentLine();
-
-            codeArea.addEventHandler(KeyEvent.KEY_TYPED, event -> showSuggestions(codeArea));
+    class CodeSuggestionsManager {
+        CodeSuggestionsManager() {
+            init();
         }
 
-        private void addSuggestionsForCurrentLine() {
-            suggestionBox.getChildren().add(new Label("Suggestion 1"));
-            suggestionBox.getChildren().add(new Label("Suggestion 2"));
+        private void init() {
+            listeners();
         }
 
-        private void showSuggestions(CodeArea codeArea) {
-            Window window = codeArea.getScene().getWindow();
-            if (window != null) {
-                double x = codeArea.getCaretBounds().map(bounds -> bounds.getMinX() + codeArea.getLayoutX()).orElse(0.0);
-                double y = codeArea.getCaretBounds().map(bounds -> bounds.getMinY() + codeArea.getLayoutY()).orElse(0.0);
-
-                suggestionsPopup.show(window, x, y);
-            }
+        private void addSuggestions(List<String> suggestions) {
+            codeSuggestionsPane.addSuggestions(suggestions);
         }
 
-        public void hideSuggestions() {
-            suggestionsPopup.hide();
+        private void listeners() {
+            SmartCodeArea.this.caretPositionProperty().addListener((observable, oldPosition, newPosition) -> {
+                int currentParagraph = SmartCodeArea.this.getCurrentParagraph();
+                int currentColumn = SmartCodeArea.this.getCaretColumn();
+
+                double multiplier = fontManager.getCurrentFontWidth();
+                double xOffset = 35;
+
+                codeSuggestionsPane.setLayoutX(currentColumn * multiplier + xOffset);
+                codeSuggestionsPane.setLayoutY(currentParagraph * multiplier);
+            });
+
+            SmartCodeArea.this.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    if (SmartCodeArea.this.getParent() instanceof Pane parent) {
+                        codeSuggestionsPane = new CodeSuggestionsPane();
+                        codeSuggestionsPane.addSuggestions(List.of("a", "b", "c"));
+                        parent.getChildren().add(codeSuggestionsPane);
+                    }
+                }
+            });
         }
     }
 
@@ -175,7 +192,10 @@ public class SmartCodeArea extends CodeArea {
 
     private CodeSuggestionsManager codeSuggestionsManager = null;
 
+    private CodeSuggestionsPane codeSuggestionsPane = null;
+
     private int tabSize = 3;
+
 
     public SmartCodeArea() {
         super();
@@ -185,6 +205,10 @@ public class SmartCodeArea extends CodeArea {
     public SmartCodeArea(Language language) {
         this();
         setLanguage(language);
+
+
+
+
     }
 
 
@@ -195,8 +219,10 @@ public class SmartCodeArea extends CodeArea {
     private void init() {
         setParagraphGraphicFactory(LineNumberFactory.get(this));
         fontManager = new FontManager(true);
-        codeSuggestionsManager = new CodeSuggestionsManager(this);
+        codeSuggestionsManager = new CodeSuggestionsManager();
         TabManager.activateTabListener(this, tabSize);
+
+
     }
 
 }

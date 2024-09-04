@@ -1,3 +1,7 @@
+.code-suggestions-pane {
+    -fx-background-color: #8f1b1b;
+}
+
 /*region Coloring of Code Area*/
 .keyword {
     -fx-fill: #ad5555;
