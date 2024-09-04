@@ -1,6 +1,5 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 
-import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -181,7 +180,7 @@ public class SmartCodeArea extends CodeArea {
                 if (event.getCode() == KeyCode.TAB) {
                     event.consume();
                     if(codeSuggestionsPane.hasSuggestions()) {
-                        String suggestion = ((Label) codeSuggestionsPane.getChildren().getFirst()).getText();
+                        String suggestion = ((Label) codeSuggestionsPane.getSuggestion(0)).getText();
                         int caretPosition = SmartCodeArea.this.getCaretPosition();
                         SmartCodeArea.this.replaceText(caretPosition - lastWord.length(), caretPosition, suggestion + " ");
                         codeSuggestionsPane.clearSuggestions();

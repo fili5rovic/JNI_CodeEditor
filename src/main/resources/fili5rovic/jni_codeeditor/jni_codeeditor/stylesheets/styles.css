@@ -1,11 +1,11 @@
 .code-suggestions-pane {
-    -fx-background-color: #8f1b1b;
-    -fx-border-width: 1px;
-    -fx-border-color: red;
+    -fx-border-color: #5d5d5d;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
 }
 
 .code-suggestion {
-    -fx-background-color: rgba(91, 91, 91, 0.13);
+    -fx-background-color: rgba(124, 123, 123, 0.28);
     -fx-border-width: 1px;
     -fx-border-color: #2a2a2a;
     -fx-text-fill: #656565;
