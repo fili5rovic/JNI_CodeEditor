@@ -213,22 +213,16 @@ public class SmartCodeArea extends CodeArea {
     }
 
     class Suggestion extends Label {
-        private final int id;
         Suggestion(String text, int id) {
             super(text);
-            this.id = id;
             this.getStyleClass().add("code-suggestion");
 
             // set pref width according to text
             this.setPrefWidth(text.length() * fontManager.getCurrentFontWidth());
 
-            this.setOnMouseClicked((event) -> {
-                codeSuggestionsManager.finishSuggestion();
-            });
+            this.setOnMouseClicked(e -> codeSuggestionsManager.finishSuggestion());
 
-            this.setOnMouseEntered((event) -> {
-                codeSuggestionsPane.selectSuggestion(id);
-            });
+            this.setOnMouseEntered(e -> codeSuggestionsPane.selectSuggestion(id));
         }
     }
 
@@ -264,7 +258,7 @@ public class SmartCodeArea extends CodeArea {
         }
 
         private void listeners() {
-            SmartCodeArea.this.caretPositionProperty().addListener((observable, oldPosition, newPosition) -> {
+            SmartCodeArea.this.caretPositionProperty().addListener(e -> {
                 paragraphIndex = SmartCodeArea.this.getCurrentParagraph();
                 int currentColumn = SmartCodeArea.this.getParagraph(paragraphIndex).length();
 
@@ -276,7 +270,7 @@ public class SmartCodeArea extends CodeArea {
                 suggest();
             });
 
-            SmartCodeArea.this.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            SmartCodeArea.this.sceneProperty().addListener((_, _, newScene) -> {
                 if (newScene != null && codeSuggestionsPane == null) {
                     if (SmartCodeArea.this.getParent() instanceof Pane parent) {
                         codeSuggestionsPane = new CodeSuggestionsPane();
