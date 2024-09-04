@@ -4,6 +4,17 @@
     -fx-border-color: red;
 }
 
+.code-suggestion {
+    -fx-background-color: rgba(91, 91, 91, 0.13);
+    -fx-border-width: 1px;
+    -fx-border-color: #2a2a2a;
+    -fx-text-fill: #656565;
+}
+
+.code-suggestion:hover, .code-suggestion:focused {
+    -fx-background-color: rgba(91, 91, 91, 0.3);
+}
+
 /*region Coloring of Code Area*/
 .keyword {
     -fx-fill: #ad5555;

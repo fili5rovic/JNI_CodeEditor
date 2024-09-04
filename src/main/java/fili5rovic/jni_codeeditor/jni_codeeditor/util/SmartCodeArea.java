@@ -16,7 +16,6 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -112,6 +111,7 @@ public class SmartCodeArea extends CodeArea {
             else
                 decreaseFontSize();
             SmartCodeArea.this.setStyle(STR."-fx-font-size: \{currentFontSize}px;");
+            codeSuggestionsPane.updateFontSize(currentFontSize);
 //            SmartCodeArea.this.lookup(".lineno").setStyle(STR."-fx-font-size: \{currentFontSize}px;");
         }
 
@@ -123,26 +123,6 @@ public class SmartCodeArea extends CodeArea {
         }
     }
 
-    static class TabManager {
-        private static EventHandler<KeyEvent> tabEventHandler;
-
-        static void activateTabListener(SmartCodeArea codeArea, int tabSize) {
-            if (tabEventHandler != null) {
-                codeArea.removeEventFilter(KeyEvent.KEY_PRESSED, tabEventHandler);
-            }
-
-            tabEventHandler = (KeyEvent event) -> {
-                if (event.getCode() == KeyCode.TAB) {
-                    event.consume();
-                    String tab = " ".repeat(tabSize);
-                    int caretPosition = codeArea.getCaretPosition();
-                    codeArea.replaceText(caretPosition, caretPosition, tab);
-                }
-            };
-
-            codeArea.addEventFilter(KeyEvent.KEY_PRESSED, tabEventHandler);
-        }
-    }
 
     class CodeSuggestionsManager {
 
@@ -157,16 +137,17 @@ public class SmartCodeArea extends CodeArea {
         }
         private void suggest() {
             codeSuggestionsPane.clearSuggestions();
-
             String paragraph = SmartCodeArea.this.getParagraph(paragraphIndex).getText().substring(0, SmartCodeArea.this.getCaretColumn());
+            System.out.println(paragraph);
             if(paragraph.trim().isEmpty())
                 return;
             String[] words = paragraph.split(" ");
             lastWord = words[words.length - 1];
+            System.out.println(lastWord);
             String[] suggestions = FileHelper.getKeywordsForLanguage(SmartCodeArea.this.highlighter.language);
             ArrayList<String> filteredSuggestions = new ArrayList<>();
             for (String suggestion : suggestions) {
-                if (suggestion.startsWith(lastWord)) {
+                if (suggestion.startsWith(lastWord) && !suggestion.equals(lastWord)) {
                     filteredSuggestions.add(suggestion);
                 }
             }
@@ -188,7 +169,7 @@ public class SmartCodeArea extends CodeArea {
             });
 
             SmartCodeArea.this.sceneProperty().addListener((observable, oldScene, newScene) -> {
-                if (newScene != null) {
+                if (newScene != null && codeSuggestionsPane == null) {
                     if (SmartCodeArea.this.getParent() instanceof Pane parent) {
                         codeSuggestionsPane = new CodeSuggestionsPane();
                         parent.getChildren().add(codeSuggestionsPane);
@@ -197,15 +178,24 @@ public class SmartCodeArea extends CodeArea {
             });
 
             SmartCodeArea.this.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-                if (event.getCode() == KeyCode.TAB && codeSuggestionsPane.hasSuggestions()) {
+                if (event.getCode() == KeyCode.TAB) {
                     event.consume();
-                    String suggestion = ((Label) codeSuggestionsPane.getChildren().getFirst()).getText();
-                    int caretPosition = SmartCodeArea.this.getCaretPosition();
-                    SmartCodeArea.this.replaceText(caretPosition - lastWord.length(), caretPosition, suggestion);
-                    System.out.println(suggestion);
-                    codeSuggestionsPane.clearSuggestions();
+                    if(codeSuggestionsPane.hasSuggestions()) {
+                        String suggestion = ((Label) codeSuggestionsPane.getChildren().getFirst()).getText();
+                        int caretPosition = SmartCodeArea.this.getCaretPosition();
+                        SmartCodeArea.this.replaceText(caretPosition - lastWord.length(), caretPosition, suggestion + " ");
+                        codeSuggestionsPane.clearSuggestions();
+                    } else {
+                        doTab();
+                    }
                 }
             });
+        }
+
+        private void doTab() {
+            String tab = " ".repeat(tabSize);
+            int caretPosition = SmartCodeArea.this.getCaretPosition();
+            SmartCodeArea.this.replaceText(caretPosition, caretPosition, tab);
         }
     }
 
@@ -239,7 +229,6 @@ public class SmartCodeArea extends CodeArea {
         setParagraphGraphicFactory(LineNumberFactory.get(this));
         fontManager = new FontManager(true);
         codeSuggestionsManager = new CodeSuggestionsManager();
-        TabManager.activateTabListener(this, tabSize);
 
 
     }
