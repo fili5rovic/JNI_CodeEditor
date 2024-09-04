@@ -125,12 +125,29 @@ public class SmartCodeArea extends CodeArea {
         }
     }
 
+
+    class Suggestion extends Label {
+        Suggestion(String text, int id) {
+            super(text);
+            this.getStyleClass().add("code-suggestion");
+
+            // set pref width according to text
+            this.setPrefWidth(text.length() * fontManager.getCurrentFontWidth());
+
+            this.setOnMouseClicked(e -> codeSuggestionsManager.finishSuggestion());
+
+            this.setOnMouseEntered(e -> codeSuggestionsPane.selectSuggestion(id));
+        }
+    }
+
+
     class CodeSuggestionsPane extends BorderPane {
         private final List<String> suggestions = new ArrayList<>();
         private int fontSize = 12;
-        private final VBox suggestionsBox= new VBox();
+        private final VBox suggestionsBox = new VBox();
 
         private int selectedIndex = 0;
+
         public CodeSuggestionsPane() {
             this.getStyleClass().clear();
             suggestionsBox.getStyleClass().add("code-suggestions-pane");
@@ -148,10 +165,9 @@ public class SmartCodeArea extends CodeArea {
         }
 
 
-
         public void addSuggestions(List<String> suggestions) {
             this.suggestions.addAll(suggestions);
-            if(suggestions.isEmpty())
+            if (suggestions.isEmpty())
                 this.setVisible(false);
             else {
                 this.setVisible(true);
@@ -176,7 +192,7 @@ public class SmartCodeArea extends CodeArea {
         public void selectNext() {
             getSuggestion(selectedIndex).getStyleClass().remove("code-suggestion-selected");
             selectedIndex++;
-            if(selectedIndex >= suggestions.size())
+            if (selectedIndex >= suggestions.size())
                 selectedIndex = 0;
             getSuggestion(selectedIndex).getStyleClass().add("code-suggestion-selected");
         }
@@ -184,13 +200,13 @@ public class SmartCodeArea extends CodeArea {
         public void selectPrevious() {
             getSuggestion(selectedIndex).getStyleClass().remove("code-suggestion-selected");
             selectedIndex--;
-            if(selectedIndex < 0)
+            if (selectedIndex < 0)
                 selectedIndex = suggestions.size() - 1;
             getSuggestion(selectedIndex).getStyleClass().add("code-suggestion-selected");
         }
 
         public void selectSuggestion(int index) {
-            if(index >= 0 && index < suggestions.size()) {
+            if (index >= 0 && index < suggestions.size()) {
                 getSuggestion(selectedIndex).getStyleClass().remove("code-suggestion-selected");
                 selectedIndex = index;
                 getSuggestion(selectedIndex).getStyleClass().add("code-suggestion-selected");
@@ -212,19 +228,6 @@ public class SmartCodeArea extends CodeArea {
         }
     }
 
-    class Suggestion extends Label {
-        Suggestion(String text, int id) {
-            super(text);
-            this.getStyleClass().add("code-suggestion");
-
-            // set pref width according to text
-            this.setPrefWidth(text.length() * fontManager.getCurrentFontWidth());
-
-            this.setOnMouseClicked(e -> codeSuggestionsManager.finishSuggestion());
-
-            this.setOnMouseEntered(e -> codeSuggestionsPane.selectSuggestion(id));
-        }
-    }
 
     class CodeSuggestionsManager {
 
@@ -279,7 +282,12 @@ public class SmartCodeArea extends CodeArea {
                 }
             });
 
+            codeCompletionListener();
+        }
+
+        private void codeCompletionListener() {
             SmartCodeArea.this.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+                bracketListener(event);
                 if (codeSuggestionsPane.hasSuggestions()) {
                     boolean shouldConsume = true;
                     switch (event.getCode()) {
@@ -293,12 +301,32 @@ public class SmartCodeArea extends CodeArea {
                         event.consume();
                 } else {
                     if (event.getCode() == KeyCode.TAB) {
-                        doTab();
+//                        doTab();
+//                        event.consume();
                     }
                 }
-
-
             });
+        }
+
+        private void bracketListener(KeyEvent e) {
+            if (e.getCode() == KeyCode.OPEN_BRACKET) {
+                SmartCodeArea.this.replaceText(SmartCodeArea.this.getCaretPosition(), SmartCodeArea.this.getCaretPosition(), e.isShiftDown() ? "}" : "]");
+                SmartCodeArea.this.moveTo(SmartCodeArea.this.getCaretPosition() - 1);
+            } else if (e.getCode() == KeyCode.DIGIT9 && e.isShiftDown()) {
+                SmartCodeArea.this.replaceText(SmartCodeArea.this.getCaretPosition(), SmartCodeArea.this.getCaretPosition(), ")");
+                SmartCodeArea.this.moveTo(SmartCodeArea.this.getCaretPosition() - 1);
+            } else if (e.getCode() == KeyCode.BACK_SPACE) {
+                int caretPosition = SmartCodeArea.this.getCaretPosition();
+                String bracketCheck = "";
+                try {
+                    bracketCheck = SmartCodeArea.this.getText(caretPosition - 1, caretPosition + 1);
+                } catch (IndexOutOfBoundsException ex) {
+                    return;
+                }
+                if (bracketCheck.equals("()") || bracketCheck.equals("[]") || bracketCheck.equals("{}")) {
+                    SmartCodeArea.this.replaceText(caretPosition - 1, caretPosition + 1, "");
+                }
+            }
         }
 
         void finishSuggestion() {
@@ -341,6 +369,7 @@ public class SmartCodeArea extends CodeArea {
     }
 
     private void init() {
+        this.getStyleClass().add("smart-code-area");
         setParagraphGraphicFactory(LineNumberFactory.get(this));
         fontManager = new FontManager(true);
         codeSuggestionsManager = new CodeSuggestionsManager();

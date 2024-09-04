@@ -1,17 +1,41 @@
 int,double,long,float,char,String,short,boolean,
 byte,void,Object,Class,Enum,Annotation,Record,
+BigDecimal,BigInteger,Number,Character,
 
 public,private,protected,static,final,abstract,
 synchronized,volatile,transient,native,strictfp,
+default,default,override,sealed,non-sealed,
 
 class,interface,extends,implements,package,import,
-enum,module,record,throws,
+enum,module,record,throws,provides,with,opens,
+exports,requires,transitive,
 
 super,this,instanceof,new,return,if,else,switch,
 case,default,while,do,for,break,continue,throw,
-try,catch,finally,assert,goto,
+try,catch,finally,assert,goto,yield,lambda,
 
 true,false,null,
 
-System,out,println,
-Math,Random,Scanner,List,Map,Set
+System,out,in,err,println,printf,format,getProperty,setProperty,
+Math,Random,Scanner,List,Map,Set,Queue,Deque,HashMap,ArrayList,
+LinkedList,TreeSet,TreeMap,HashSet,PriorityQueue,Collections,Arrays,
+Optional,Stream,Files,Path,Paths,BufferedReader,BufferedWriter,FileInputStream,
+FileOutputStream,ObjectInputStream,ObjectOutputStream,ExecutorService,Executors,
+
+Runnable,Callable,Thread,Future,CompletableFuture,CountDownLatch,
+ScheduledExecutorService,CyclicBarrier,Semaphore,ReentrantLock,ReadWriteLock,
+Phaser,AtomicInteger,AtomicLong,AtomicReference,AtomicBoolean,
+
+JFrame,JPanel,JButton,JLabel,JTextField,JTextArea,JScrollPane,JComboBox,
+JCheckBox,JRadioButton,JMenu,JMenuItem,JMenuBar,JToolBar,JTable,JTree,
+JProgressBar,JSlider,JFileChooser,ImageIcon,Graphics,Graphics2D,
+
+BufferedImage,Color,Font,Dimension,Point,Rectangle,Polygon,GradientPaint,
+BasicStroke,Stroke,AffineTransform,RenderingHints,
+
+SQLException,IOException,FileNotFoundException,ParseException,ClassNotFoundException,
+InterruptedException,ArithmeticException,ArrayIndexOutOfBoundsException,
+NullPointerException,IllegalArgumentException,IllegalStateException,
+UnsupportedOperationException,SecurityException,NumberFormatException,
+IllegalAccessException,CloneNotSupportedException,NoSuchFieldException,
+NoSuchMethodException,InvocationTargetException,Error,RuntimeException,Exception,
