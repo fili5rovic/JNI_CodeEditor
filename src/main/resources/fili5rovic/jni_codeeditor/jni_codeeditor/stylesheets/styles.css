@@ -1,5 +1,3 @@
-
-
 /*region Coloring of Code Area*/
 .keyword {
     -fx-fill: #ad5555;
@@ -20,6 +18,12 @@
 }
 /*endregion*/
 
+.line-highlighter {
+    -fx-fill: #cbcbcb;
+}
+
+
+/*region Code Suggestions*/
 .code-suggestions-pane {
     -fx-border-color: #5d5d5d;
     -fx-border-width: 2px;
@@ -40,3 +44,4 @@
 .code-suggestion:hover, .code-suggestion:focused {
     -fx-background-color: rgba(91, 91, 91, 0.3);
 }
+/*endregion*/

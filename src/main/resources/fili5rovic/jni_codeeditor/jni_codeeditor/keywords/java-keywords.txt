@@ -4,7 +4,7 @@ BigDecimal,BigInteger,Number,Character,
 
 public,private,protected,static,final,abstract,
 synchronized,volatile,transient,native,strictfp,
-default,default,override,sealed,non-sealed,
+override,sealed,non-sealed,
 
 class,interface,extends,implements,package,import,
 enum,module,record,throws,provides,with,opens,

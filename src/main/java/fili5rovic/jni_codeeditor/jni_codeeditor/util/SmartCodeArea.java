@@ -7,6 +7,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.fxmisc.richtext.CodeArea;
@@ -76,15 +77,16 @@ public class SmartCodeArea extends CodeArea {
     }
 
     class FontManager {
-        private static final int DEFAULT_FONT_SIZE = 12;
-        private static final int MAX_FONT_SIZE = 40;
-        private static final int MIN_FONT_SIZE = 8;
+        private static final int DEFAULT_FONT_SIZE = 18;
+        private static final int MAX_FONT_SIZE = 50;
+        private static final int MIN_FONT_SIZE = 10;
         private int currentFontSize = DEFAULT_FONT_SIZE;
 
         FontManager(boolean shouldResizeOnScroll) {
             if (shouldResizeOnScroll) {
                 scrollListener();
             }
+            updateFontSize();
         }
 
         private void increaseFontSize() {
@@ -112,9 +114,16 @@ public class SmartCodeArea extends CodeArea {
                 increaseFontSize();
             else
                 decreaseFontSize();
-            SmartCodeArea.this.setStyle(STR."-fx-font-size: \{currentFontSize}px;");
-            codeSuggestionsPane.updateFontSize(currentFontSize);
+            updateFontSize();
 //            SmartCodeArea.this.lookup(".lineno").setStyle(STR."-fx-font-size: \{currentFontSize}px;");
+        }
+
+        private void updateFontSize() {
+            SmartCodeArea.this.setStyle(STR."-fx-font-size: \{currentFontSize}px;");
+            if (codeSuggestionsPane != null) {
+                codeSuggestionsPane.updateFontSize(currentFontSize);
+                codeSuggestionsPane.clearSuggestions();
+            }
         }
 
         public double getCurrentFontWidth() {
@@ -152,6 +161,7 @@ public class SmartCodeArea extends CodeArea {
             this.getStyleClass().clear();
             suggestionsBox.getStyleClass().add("code-suggestions-pane");
             setCenter(suggestionsBox);
+            clearSuggestions();
         }
 
 
@@ -245,10 +255,14 @@ public class SmartCodeArea extends CodeArea {
         private void suggest() {
             codeSuggestionsPane.clearSuggestions();
             String paragraph = SmartCodeArea.this.getParagraph(paragraphIndex).getText().substring(0, SmartCodeArea.this.getCaretColumn());
-            if (paragraph.trim().isEmpty())
+            if (paragraph.isBlank() || paragraph.endsWith(" ") || paragraph.endsWith("\n"))
                 return;
             String[] words = paragraph.split(" ");
             lastWord = words[words.length - 1];
+            addKeywordSuggestions();
+        }
+
+        private void addKeywordSuggestions() {
             String[] suggestions = FileHelper.getKeywordsForLanguage(SmartCodeArea.this.highlighter.language);
             ArrayList<String> filteredSuggestions = new ArrayList<>();
             for (String suggestion : suggestions) {
@@ -256,7 +270,6 @@ public class SmartCodeArea extends CodeArea {
                     filteredSuggestions.add(suggestion);
                 }
             }
-
             codeSuggestionsPane.addSuggestions(filteredSuggestions);
         }
 
@@ -265,11 +278,21 @@ public class SmartCodeArea extends CodeArea {
                 paragraphIndex = SmartCodeArea.this.getCurrentParagraph();
                 int currentColumn = SmartCodeArea.this.getParagraph(paragraphIndex).length();
 
-                double multiplier = fontManager.getCurrentFontWidth();
-                double xOffset = 35;
+                Text text = new Text("Sample");
+                text.setFont(new Font("monospace", fontManager.currentFontSize));
 
-                codeSuggestionsPane.setLayoutX(currentColumn * multiplier + xOffset);
-                codeSuggestionsPane.setLayoutY(paragraphIndex * multiplier);
+                // Get the height of the text
+                double lineHeight = text.getBoundsInLocal().getHeight();
+                double xOffset = 0;
+
+                double layoutX = currentColumn * fontManager.getCurrentFontWidth() + xOffset;
+                double layoutY = (paragraphIndex + 1) * lineHeight;
+
+                System.out.println("Layout Y " + layoutY);
+
+                System.out.println("Paragraph index: " + paragraphIndex);
+                codeSuggestionsPane.setLayoutX(layoutX);
+                codeSuggestionsPane.setLayoutY(layoutY);
                 suggest();
             });
 
@@ -301,8 +324,8 @@ public class SmartCodeArea extends CodeArea {
                         event.consume();
                 } else {
                     if (event.getCode() == KeyCode.TAB) {
-//                        doTab();
-//                        event.consume();
+                        doTab();
+                        event.consume();
                     }
                 }
             });
@@ -320,7 +343,7 @@ public class SmartCodeArea extends CodeArea {
                 String bracketCheck = "";
                 try {
                     bracketCheck = SmartCodeArea.this.getText(caretPosition - 1, caretPosition + 1);
-                } catch (IndexOutOfBoundsException ex) {
+                } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
                     return;
                 }
                 if (bracketCheck.equals("()") || bracketCheck.equals("[]") || bracketCheck.equals("{}")) {
@@ -356,6 +379,10 @@ public class SmartCodeArea extends CodeArea {
     public SmartCodeArea() {
         super();
         init();
+        for (String s : getParagraph(0).getParagraphStyle()) {
+            System.out.println(s);
+        }
+
     }
 
     public SmartCodeArea(Language language) {
@@ -367,14 +394,14 @@ public class SmartCodeArea extends CodeArea {
     public void setLanguage(Language language) {
         highlighter = new HighLighter(language);
     }
-
     private void init() {
+        setLineHighlighterOn(true);
+        setLineHighlighterFill(Paint.valueOf("#d0e1f9"));
+        setWrapText(true);
         this.getStyleClass().add("smart-code-area");
         setParagraphGraphicFactory(LineNumberFactory.get(this));
         fontManager = new FontManager(true);
         codeSuggestionsManager = new CodeSuggestionsManager();
-
-
     }
 
 }
