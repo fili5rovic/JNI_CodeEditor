@@ -1,5 +1,7 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 
+import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.Language;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

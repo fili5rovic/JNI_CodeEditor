@@ -1,7 +1,7 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.controller;
 
-import fili5rovic.jni_codeeditor.jni_codeeditor.util.Language;
-import fili5rovic.jni_codeeditor.jni_codeeditor.util.SmartCodeArea;
+import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.Language;
+import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.SmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
