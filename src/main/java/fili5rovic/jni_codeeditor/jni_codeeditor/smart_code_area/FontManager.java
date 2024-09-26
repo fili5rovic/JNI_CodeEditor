@@ -49,7 +49,7 @@ public class FontManager {
     }
 
     private void updateFontSize() {
-        codeArea.setStyle(STR."-fx-font-size: \{currentFontSize}px;");
+        codeArea.setStyle("-fx-font-size: " + currentFontSize + "px;");
         CodeSuggestionsPane codeSuggestionsPane = codeArea.getCodeSuggestionsPane();
         if (codeSuggestionsPane != null) {
             codeSuggestionsPane.updateFontSize(currentFontSize);

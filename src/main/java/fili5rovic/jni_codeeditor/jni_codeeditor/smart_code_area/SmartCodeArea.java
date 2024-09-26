@@ -22,14 +22,14 @@ public class SmartCodeArea extends CodeArea {
         HighLighter(SmartCodeArea codeArea) {
             this.language = codeArea.getLanguage();
             String[] KEYWORDS = FileHelper.getKeywordsForLanguage(language);
-            String KEYWORD_PATTERN = STR."\\b(\{String.join("|", KEYWORDS)})\\b";
+            String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
             String PAREN_PATTERN = "[()]";
             String BRACE_PATTERN = "[{}]";
             String BRACKET_PATTERN = "[\\[\\]]";
             String SEMICOLON_PATTERN = ";";
             String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
             String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
-            PATTERN = Pattern.compile(STR."(?<KEYWORD>\{KEYWORD_PATTERN})|(?<PAREN>\{PAREN_PATTERN})|(?<BRACE>\{BRACE_PATTERN})|(?<BRACKET>\{BRACKET_PATTERN})|(?<SEMICOLON>\{SEMICOLON_PATTERN})|(?<STRING>\{STRING_PATTERN})|(?<COMMENT>\{COMMENT_PATTERN})");
+            PATTERN = Pattern.compile("(?<KEYWORD>" + KEYWORD_PATTERN + ")|(?<PAREN>" + PAREN_PATTERN + ")|(?<BRACE>" + BRACE_PATTERN + ")|(?<BRACKET>" + BRACKET_PATTERN + ")|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")|(?<STRING>" + STRING_PATTERN + ")|(?<COMMENT>" + COMMENT_PATTERN + ")");
 
             codeArea.textProperty().addListener((_, _, _) -> applyHighlighting(codeArea));
         }
@@ -72,8 +72,6 @@ public class SmartCodeArea extends CodeArea {
     public CodeSuggestionsManager codeSuggestionsManager = null;
 
     private CodeSuggestionsPane codeSuggestionsPane = null;
-
-    private int tabSize = 3;
 
     private Language language = Language.JAVA;
 

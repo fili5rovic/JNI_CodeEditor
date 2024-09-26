@@ -80,7 +80,6 @@ public class CodeSuggestionsManager {
                 }
             }
         });
-
         codeCompletionListener();
     }
 

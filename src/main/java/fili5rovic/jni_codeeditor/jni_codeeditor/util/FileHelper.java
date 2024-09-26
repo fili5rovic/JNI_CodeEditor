@@ -29,7 +29,7 @@ public class FileHelper {
             case JAVA -> fileName = "java-keywords.txt";
             case CPP ->  fileName = "cpp-keywords.txt";
         }
-        String path = STR."/fili5rovic/jni_codeeditor/jni_codeeditor/keywords/\{fileName}";
+        String path = "/fili5rovic/jni_codeeditor/jni_codeeditor/keywords/" + fileName;
         InputStream inputStream = FileHelper.class.getResourceAsStream(path);
         String content = FileHelper.readFromFile(inputStream);
         String[] keywords = content.split(",");
