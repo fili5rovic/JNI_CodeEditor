@@ -7,16 +7,25 @@ import java.io.File;
 
 
 public class HierarchyManager {
-
-    // Method to return TreeView of file system in the given directory
-    public TreeView<String> getFileSystemTree(String directoryPath) {
-        File rootDir = new File(directoryPath);
-        TreeItem<String> rootItem = createNode(rootDir);
-        return new TreeView<>(rootItem);
+    private TreeView<String> hierarchy;
+    private String rootProjectPath;
+    public HierarchyManager(TreeView<String> hierarchy) {
+        this.hierarchy = hierarchy;
     }
 
-    // Helper method to create TreeItem recursively for directories and files
-    private TreeItem<String> createNode(File file) {
+    public void setPath(String path) {
+        getFileSystemTree(path);
+    }
+
+    private void getFileSystemTree(String directoryPath) {
+        File rootDir = new File(directoryPath);
+        TreeItem<String> rootItem = createNode(rootDir);
+        hierarchy.setRoot(rootItem);
+        this.rootProjectPath = directoryPath;
+    }
+
+
+    private static TreeItem<String> createNode(File file) {
         TreeItem<String> treeItem = new TreeItem<>(file.getName());
         if (file.isDirectory()) {
             for (File child : file.listFiles()) {
@@ -24,5 +33,9 @@ public class HierarchyManager {
             }
         }
         return treeItem;
+    }
+
+    public String getRootPath() {
+        return rootProjectPath;
     }
 }

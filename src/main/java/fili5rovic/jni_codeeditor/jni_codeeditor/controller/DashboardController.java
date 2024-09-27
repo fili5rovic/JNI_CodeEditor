@@ -1,13 +1,11 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.controller;
 
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.Language;
+import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.SmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
 
@@ -18,6 +16,9 @@ public class DashboardController extends ControllerBase {
 
     @FXML
     private TreeView<String> projectHierarchy;
+
+
+
     @FXML
     private BorderPane codeAreaPane;
     @FXML
@@ -27,42 +28,37 @@ public class DashboardController extends ControllerBase {
 
     private SmartCodeArea codeArea;
 
-    private ProjectTreeManager projectTreeManager;
     private DividerManager dividerManager;
+    private ProjectManager projectManager;
 
-    class ProjectTreeManager {
-        ProjectTreeManager() {
-            init();
-        }
 
-        void init() {
-            TreeItem<String> root = new TreeItem<>("Projects");
-            TreeItem<String> item1 = new TreeItem<>("Project 1");
-            root.getChildren().add(item1);
-            DashboardController.this.projectHierarchy.setRoot(root);
-        }
-    }
 
-    class DividerManager {
+    static class DividerManager {
         private double nextDividerPosition = 0.0;
         private double oldDividerPosition = 0.2;
         private double absoluteDividerPosition = 150;
-        DividerManager() {
+
+        private SplitPane splitPane;
+        private Button collapseBtn;
+
+        DividerManager(SplitPane splitPane, Button collapseBtn) {
+            this.splitPane = splitPane;
+            this.collapseBtn = collapseBtn;
             initListeners();
         }
 
         private void initListeners() {
-            horizontalSplitPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-                horizontalSplitPane.setDividerPositions(absoluteDividerPosition / newValue.doubleValue());
+            splitPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+                splitPane.setDividerPositions(absoluteDividerPosition / newValue.doubleValue());
             });
-            horizontalSplitPane.getDividers().getFirst().positionProperty().addListener((observable, oldValue, newValue) -> {
-                absoluteDividerPosition = newValue.doubleValue() * horizontalSplitPane.getWidth();
+            splitPane.getDividers().getFirst().positionProperty().addListener((observable, oldValue, newValue) -> {
+                absoluteDividerPosition = newValue.doubleValue() * splitPane.getWidth();
             });
-            collapseProjectPaneBtn.setOnAction(event -> collapseProjectPaneBtnClicked());
+            collapseBtn.setOnAction(event -> collapseProjectPaneBtnClicked());
         }
 
         private void collapseProjectPaneBtnClicked() {
-            var divider = horizontalSplitPane.getDividers().getFirst();
+            var divider = splitPane.getDividers().getFirst();
             oldDividerPosition = divider.getPosition();
 
             divider.setPosition(nextDividerPosition);
@@ -74,15 +70,32 @@ public class DashboardController extends ControllerBase {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Window.getWindowAt(Window.WINDOW_DASHBOARD).setController(this);
-        init();
+        setupTabPane();
+        initManagers();
     }
 
-    private void init() {
-        codeArea = new SmartCodeArea(Language.JAVA);
-        codeAreaPane.setCenter(codeArea);
+    private void initManagers() {
+        dividerManager = new DividerManager(horizontalSplitPane, collapseProjectPaneBtn);
+        projectManager = new ProjectManager(this);
+    }
 
-        projectTreeManager = new ProjectTreeManager();
-        dividerManager = new DividerManager();
+    private void setupTabPane() {
+        TabPane tabPane = new TabPane();
+        codeAreaPane.setCenter(tabPane);
+
+        Tab tab = new Tab("untitled");
+        codeArea = new SmartCodeArea(Language.JAVA);
+        tab.setContent(codeArea);
+        tabPane.getTabs().add(tab);
+    }
+
+    @FXML
+    private void openProjectAction() {
+        projectManager.openProjectAction();
+    }
+
+    public TreeView<String> getProjectHierarchy() {
+        return projectHierarchy;
     }
 
 }
