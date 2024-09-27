@@ -3,6 +3,7 @@ package fili5rovic.jni_codeeditor.jni_codeeditor.controller;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.Language;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.SmartCodeArea;
+import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.TabSmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -18,20 +19,15 @@ public class DashboardController extends ControllerBase {
     private TreeView<String> projectHierarchy;
 
 
-
     @FXML
-    private BorderPane codeAreaPane;
+    private TabPane mainTabPane;
     @FXML
     private SplitPane horizontalSplitPane;
     @FXML
     private Button collapseProjectPaneBtn;
 
-    private SmartCodeArea codeArea;
-
     private DividerManager dividerManager;
     private ProjectManager projectManager;
-
-
 
     static class DividerManager {
         private double nextDividerPosition = 0.0;
@@ -80,13 +76,7 @@ public class DashboardController extends ControllerBase {
     }
 
     private void setupTabPane() {
-        TabPane tabPane = new TabPane();
-        codeAreaPane.setCenter(tabPane);
-
-        Tab tab = new Tab("untitled");
-        codeArea = new SmartCodeArea(Language.JAVA);
-        tab.setContent(codeArea);
-        tabPane.getTabs().add(tab);
+        mainTabPane.getTabs().add(new TabSmartCodeArea(new SmartCodeArea(Language.JAVA), "untitled"));
     }
 
     @FXML
