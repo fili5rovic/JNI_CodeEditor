@@ -7,6 +7,7 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Matcher;
@@ -72,10 +73,12 @@ public class SmartCodeArea extends CodeArea {
     private CodeSuggestionsPane codeSuggestionsPane = null;
 
     private Language language = Language.JAVA;
+    private final File file;
 
 
-    public SmartCodeArea(Language language) {
-        setLanguage(language);
+    public SmartCodeArea(Language language, File file) {
+        this.file = file;
+        this.language = language;
         init();
     }
 
@@ -89,7 +92,10 @@ public class SmartCodeArea extends CodeArea {
         highlighter = new HighLighter(this);
         fontManager = new FontManager(this,true);
         codeSuggestionsManager = new CodeSuggestionsManager(this);
+        SavingManager savingManager = new SavingManager(this, file);
     }
+
+
 
     public CodeSuggestionsPane getCodeSuggestionsPane() {
         return codeSuggestionsPane;
@@ -100,8 +106,5 @@ public class SmartCodeArea extends CodeArea {
 
     public Language getLanguage() {
         return language;
-    }
-    public void setLanguage(Language language) {
-        this.language = language;
     }
 }

@@ -36,8 +36,14 @@ public class CommandLineUtil {
         createCppFileFromHeader(javaFileName.replace(".java", ""), files[0], workingDirectory);
     }
 
-    public static void createJNI(ArrayList<String> cppFileNames, String javaFileName, File workingDirectory) throws IOException, InterruptedException {
-        createCppFileFromJavaFile(javaFileName, workingDirectory);
+    /**
+     * Creates a shared library from cpp files.
+     * @param cppFileNames The names of the cpp files without the extension
+     * @param workingDirectory The directory where the Java file is located and where the shared library will be created
+     * @throws IOException If the file cannot be created
+     * @throws InterruptedException If the process is interrupted
+     */
+    public static void createDLL(ArrayList<String> cppFileNames, File workingDirectory) throws IOException, InterruptedException {
         for (String cppFileName : cppFileNames)
             createObjectFile(cppFileName, workingDirectory);
         createSharedLibrary(cppFileNames, workingDirectory);

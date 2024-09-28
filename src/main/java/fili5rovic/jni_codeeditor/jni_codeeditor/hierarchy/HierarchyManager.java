@@ -75,10 +75,15 @@ public class HierarchyManager {
 
     private void addClickEventFilters() {
         hierarchy.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-            if(e.getButton() != MouseButton.PRIMARY)
+            if(e.getButton() != MouseButton.PRIMARY) {
+                if(e.getButton() == MouseButton.SECONDARY)
+                    contextMenuRequest(e.getScreenX(), e.getScreenY());
                 return;
+            }
 
-            contextMenu.hide();
+            if(contextMenu.isShowing())
+                contextMenu.hide();
+            contextMenu.getItems().clear();
             TreeItem<String> selectedItem = hierarchy.getSelectionModel().getSelectedItem();
             clickNum++;
             if (selectedItem != null && selectedItem.equals(lastSelectedItem) && clickNum == 2) {
@@ -89,13 +94,15 @@ public class HierarchyManager {
 
             lastSelectedItem = selectedItem;
         });
-        hierarchy.setOnContextMenuRequested(event -> {
-            TreeItem<String> selectedItem = hierarchy.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                contextMenu.show(hierarchy, event.getScreenX(), event.getScreenY());
-                makeMenuItemsForSelectedItem(selectedItem);
-            }
-        });
+        hierarchy.setOnContextMenuRequested(e -> contextMenuRequest(e.getScreenX(), e.getScreenY()));
+    }
+
+    private void contextMenuRequest(double x, double y) {
+        TreeItem<String> selectedItem = hierarchy.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            contextMenu.show(hierarchy, x, y);
+            makeMenuItemsForSelectedItem(selectedItem);
+        }
     }
 
     private void makeMenuItemsForSelectedItem(TreeItem<String> selectedItem) {
@@ -105,28 +112,22 @@ public class HierarchyManager {
         contextMenu.getItems().add(openItem);
 
         if(selectedItem.getValue().endsWith(".java")) {
-            File file = new File(getPathForTreeItem(selectedItem));
-            String code = FileHelper.readFromFile(file);
+            File javaFile = new File(getPathForTreeItem(selectedItem));
+            String code = FileHelper.readFromFile(javaFile);
             if(code.matches("(?s).*\\bnative\\b.*") && selectedItem.getParent() != null) {
-                System.out.println("Native methods found");
-                MenuItem generateHeaderItem = menuItemJNI(selectedItem, file);
+                MenuItem generateHeaderItem = menuItemCreateCppFile(javaFile);
                 contextMenu.getItems().add(generateHeaderItem);
-            } else {
-                System.out.println("No native methods found");
             }
+        } else if(selectedItem.getValue().endsWith(".cpp")) {
         }
     }
 
-    private MenuItem menuItemJNI(TreeItem<String> selectedItem, File file) {
+    private MenuItem menuItemCreateCppFile(File file) {
         MenuItem jniMenuItem = new MenuItem("Create native methods");
         jniMenuItem.setOnAction(_ -> {
             try {
-//                ArrayList<String> cppFiles = new ArrayList<>();
-//                for(TreeItem<String> child : selectedItem.getParent().getChildren()) {
-//                    if(child.getValue().endsWith(".cpp"))
-//                        cppFiles.add(getPathForTreeItem(child));
-//                }
                 CommandLineUtil.createCppFileFromJavaFile(file.getName(), file.getParentFile());
+                refresh();
             } catch (IOException | InterruptedException e) {
                 System.out.println("ERROR");
                 throw new RuntimeException(e);

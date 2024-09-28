@@ -10,7 +10,6 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -88,7 +87,7 @@ public class DashboardController extends ControllerBase {
         } else if (file.getName().endsWith(".css")) {
             language = Language.CSS;
         }
-        SmartCodeArea smartCodeArea = new SmartCodeArea(language);
+        SmartCodeArea smartCodeArea = new SmartCodeArea(language, file);
         smartCodeArea.replaceText(FileHelper.readFromFile(file));
         TabSmartCodeArea tabSmartCodeArea = new TabSmartCodeArea(smartCodeArea, file.getName());
         mainTabPane.getTabs().add(tabSmartCodeArea);
