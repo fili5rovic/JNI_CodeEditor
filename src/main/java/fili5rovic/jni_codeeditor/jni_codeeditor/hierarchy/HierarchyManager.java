@@ -132,11 +132,7 @@ public class HierarchyManager {
                     contextMenu.getItems().add(generateHeaderItem);
                 }
             }
-        } else {
-
         }
-
-
     }
 
     private MenuItem menuItemCreateCppFile(File file) {

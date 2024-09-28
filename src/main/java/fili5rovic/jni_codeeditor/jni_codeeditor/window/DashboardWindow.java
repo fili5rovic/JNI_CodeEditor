@@ -1,5 +1,6 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.window;
 
+import fili5rovic.jni_codeeditor.jni_codeeditor.controller.DashboardController;
 import javafx.stage.Stage;
 
 public class DashboardWindow extends Window {
@@ -10,5 +11,6 @@ public class DashboardWindow extends Window {
     @Override
     public void init(Stage stage) {
         load(stage,resource,title);
+        ((DashboardController) Window.getWindowAt(Window.WINDOW_DASHBOARD).getController()).initShortcuts(stage.getScene());
     }
 }

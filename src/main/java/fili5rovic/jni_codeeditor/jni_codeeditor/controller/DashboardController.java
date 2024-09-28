@@ -6,9 +6,13 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.SmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.TabSmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.FileHelper;
+import fili5rovic.jni_codeeditor.jni_codeeditor.util.ShortcutKeys;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 import java.io.File;
 import java.net.URL;
@@ -20,6 +24,8 @@ public class DashboardController extends ControllerBase {
     private TreeView<String> projectHierarchy;
     @FXML
     private TabPane mainTabPane;
+    @FXML
+    private Pane paneBehindTabPane;
     @FXML
     private SplitPane horizontalSplitPane;
     @FXML
@@ -89,13 +95,24 @@ public class DashboardController extends ControllerBase {
         }
         SmartCodeArea smartCodeArea = new SmartCodeArea(language, file);
         smartCodeArea.replaceText(FileHelper.readFromFile(file));
-        TabSmartCodeArea tabSmartCodeArea = new TabSmartCodeArea(smartCodeArea, file.getName());
+        TabSmartCodeArea tabSmartCodeArea = new TabSmartCodeArea(smartCodeArea, file.getName(), this);
+        tabSmartCodeArea.setOnClosed(_ -> {
+            if (mainTabPane.getTabs().isEmpty())
+                paneBehindTabPane.setVisible(true);
+        });
         mainTabPane.getTabs().add(tabSmartCodeArea);
         mainTabPane.getSelectionModel().select(tabSmartCodeArea);
+        if(paneBehindTabPane.isVisible())
+            paneBehindTabPane.setVisible(false);
     }
+
 
     private void initIcons() {
         collapseProjectPaneBtn.setGraphic(IconManager.getCollapseIcon());
+    }
+
+    public void initShortcuts(Scene scene) {
+        scene.getAccelerators().put(ShortcutKeys.OPEN_PROJECT, this::openProjectAction);
     }
 
     @FXML
@@ -106,5 +123,7 @@ public class DashboardController extends ControllerBase {
     public TreeView<String> getProjectHierarchy() {
         return projectHierarchy;
     }
+
+
 
 }
