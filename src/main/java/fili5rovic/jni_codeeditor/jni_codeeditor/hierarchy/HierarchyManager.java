@@ -76,13 +76,12 @@ public class HierarchyManager {
             if (selectedItem != null && selectedItem.equals(lastSelectedItem) && clickNum == 2) {
                 onDoubleClick(selectedItem);
                 clickNum = 0;
-            } else {
+            } else
                 clickNum = 1;
-            }
+
             lastSelectedItem = selectedItem;
         });
         hierarchy.setOnContextMenuRequested(event -> {
-
             TreeItem<String> selectedItem = hierarchy.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 contextMenu.show(hierarchy, event.getScreenX(), event.getScreenY());
@@ -94,7 +93,7 @@ public class HierarchyManager {
     private void makeMenuItemsForSelectedItem(TreeItem<String> selectedItem) {
         contextMenu.getItems().clear();
         MenuItem openItem = new MenuItem("Open");
-        openItem.setOnAction(event -> onDoubleClick(selectedItem));
+        openItem.setOnAction(_ -> onDoubleClick(selectedItem));
         contextMenu.getItems().add(openItem);
     }
 
@@ -115,9 +114,5 @@ public class HierarchyManager {
         if(file.isDirectory())
             return;
         dc.addNewTabPane(file);
-    }
-
-    public String getRootPath() {
-        return rootProjectPath;
     }
 }

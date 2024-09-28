@@ -8,6 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CodeSuggestionsManager {
 
@@ -19,6 +20,8 @@ public class CodeSuggestionsManager {
     private CodeSuggestionsPane codeSuggestionsPane;
     private final SmartCodeArea codeArea;
 
+    private final HashMap<Integer, Integer> fontLineHeights = new HashMap<>();
+
     CodeSuggestionsManager(SmartCodeArea codeArea) {
         this.codeArea = codeArea;
         this.codeSuggestionsPane = codeArea.getCodeSuggestionsPane();
@@ -27,6 +30,40 @@ public class CodeSuggestionsManager {
 
     private void init() {
         listeners();
+        fontLineHeights.put(10,12);
+        fontLineHeights.put(18,24);
+        fontLineHeights.put(19,23);
+        fontLineHeights.put(20,24);
+        fontLineHeights.put(21,26);
+        fontLineHeights.put(22,27);
+        fontLineHeights.put(23,28);
+        fontLineHeights.put(24,28);
+        fontLineHeights.put(25,31);
+        fontLineHeights.put(26,31);
+        fontLineHeights.put(27,32);
+        fontLineHeights.put(28,34);
+        fontLineHeights.put(29,35);
+        fontLineHeights.put(30,36);
+        fontLineHeights.put(31,38);
+        fontLineHeights.put(32,39);
+        fontLineHeights.put(33,39);
+        fontLineHeights.put(34,40);
+        fontLineHeights.put(35,42);
+        fontLineHeights.put(36,43);
+        fontLineHeights.put(37,43);
+        fontLineHeights.put(38,46);
+        fontLineHeights.put(39,47);
+        fontLineHeights.put(40,47);
+        fontLineHeights.put(41,50);
+        fontLineHeights.put(42,50);
+        fontLineHeights.put(43,51);
+        fontLineHeights.put(44,51);
+        fontLineHeights.put(45,54);
+        fontLineHeights.put(46,55);
+        fontLineHeights.put(47,55);
+        fontLineHeights.put(48,58);
+        fontLineHeights.put(49,58);
+        fontLineHeights.put(50,59);
     }
 
     private void suggest() {
@@ -59,15 +96,15 @@ public class CodeSuggestionsManager {
             text.setFont(new Font("monospace", codeArea.fontManager.getCurrentFontSize()));
 
             double lineHeight = text.getBoundsInLocal().getHeight();
+            System.out.println("Line height: " + lineHeight);
+            System.out.println("Font size: " + codeArea.fontManager.getCurrentFontSize());
             double xOffset = 0;
 
             double layoutX = currentColumn * codeArea.fontManager.getCurrentFontWidth() + xOffset;
-            double layoutY = (paragraphIndex + 1) * lineHeight;
-
-            if(codeSuggestionsPane == null)  {
-                System.out.println("Code suggestions pane is null");
+//            double layoutY = (paragraphIndex + 1) * lineHeight;
+            double layoutY = (paragraphIndex + 1) * fontLineHeights.get(codeArea.fontManager.getCurrentFontSize());
+            if(codeSuggestionsPane == null)
                 return;
-            }
             codeSuggestionsPane.setLayoutX(layoutX);
             codeSuggestionsPane.setLayoutY(layoutY);
             suggest();
@@ -100,10 +137,6 @@ public class CodeSuggestionsManager {
     private void codeCompletionListener() {
         codeArea.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
             bracketListener(event);
-            if(codeSuggestionsPane == null) {
-                System.out.println("Code suggestions pane is null");
-                return;
-            }
             if (codeSuggestionsPane.hasSuggestions()) {
                 boolean shouldConsume = true;
                 switch (event.getCode()) {
