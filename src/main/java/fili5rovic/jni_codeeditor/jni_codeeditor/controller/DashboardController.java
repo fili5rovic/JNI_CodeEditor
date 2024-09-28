@@ -1,5 +1,6 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.controller;
 
+import fili5rovic.jni_codeeditor.jni_codeeditor.hierarchy.IconManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.Language;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.SmartCodeArea;
@@ -30,7 +31,6 @@ public class DashboardController extends ControllerBase {
 
     static class DividerManager {
         private double nextDividerPosition = 0.0;
-        private double oldDividerPosition = 0.2;
         private double absoluteDividerPosition = 150;
 
         private final SplitPane splitPane;
@@ -54,7 +54,7 @@ public class DashboardController extends ControllerBase {
 
         private void collapseProjectPaneBtnClicked() {
             var divider = splitPane.getDividers().getFirst();
-            oldDividerPosition = divider.getPosition();
+            double oldDividerPosition = divider.getPosition();
 
             divider.setPosition(nextDividerPosition);
 
@@ -66,6 +66,7 @@ public class DashboardController extends ControllerBase {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Window.getWindowAt(Window.WINDOW_DASHBOARD).setController(this);
         initManagers();
+        initIcons();
         projectManager.openProject("D:\\FAKULTET\\CetvrtiSemestar\\POOP\\PoopJavaProjekatGithub\\DatabaseImplementationJava\\DatabaseImplementation\\src");
     }
 
@@ -89,7 +90,13 @@ public class DashboardController extends ControllerBase {
         }
         SmartCodeArea smartCodeArea = new SmartCodeArea(language);
         smartCodeArea.replaceText(FileHelper.readFromFile(file));
-        mainTabPane.getTabs().add(new TabSmartCodeArea(smartCodeArea, file.getName()));
+        TabSmartCodeArea tabSmartCodeArea = new TabSmartCodeArea(smartCodeArea, file.getName());
+        mainTabPane.getTabs().add(tabSmartCodeArea);
+        mainTabPane.getSelectionModel().select(tabSmartCodeArea);
+    }
+
+    private void initIcons() {
+        collapseProjectPaneBtn.setGraphic(IconManager.getCollapseIcon());
     }
 
     @FXML

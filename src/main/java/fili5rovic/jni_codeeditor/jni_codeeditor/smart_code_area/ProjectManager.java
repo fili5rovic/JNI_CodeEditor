@@ -26,7 +26,4 @@ public class ProjectManager {
         hierarchyManager.setPath(path);
     }
 
-    public String getRootPath() {
-        return hierarchyManager.getRootPath();
-    }
 }

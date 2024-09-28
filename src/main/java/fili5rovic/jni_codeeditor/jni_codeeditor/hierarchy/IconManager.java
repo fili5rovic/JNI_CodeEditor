@@ -1,5 +1,7 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.hierarchy;
 
+import javafx.scene.image.ImageView;
+
 import java.io.File;
 
 public class IconManager {
@@ -41,5 +43,10 @@ public class IconManager {
             default:
                 return ICON_FILE;
         }
+    }
+
+
+    public static ImageView getCollapseIcon() {
+        return new ImageView(ICONS_PATH + "light-theme/collapse.png");
     }
 }

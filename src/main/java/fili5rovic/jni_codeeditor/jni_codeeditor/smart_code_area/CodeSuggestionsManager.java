@@ -64,9 +64,10 @@ public class CodeSuggestionsManager {
             double layoutX = currentColumn * codeArea.fontManager.getCurrentFontWidth() + xOffset;
             double layoutY = (paragraphIndex + 1) * lineHeight;
 
-//            System.out.println("Layout Y " + layoutY);
-//            System.out.println("Paragraph index: " + paragraphIndex);
-            if(codeSuggestionsPane == null) return;
+            if(codeSuggestionsPane == null)  {
+                System.out.println("Code suggestions pane is null");
+                return;
+            }
             codeSuggestionsPane.setLayoutX(layoutX);
             codeSuggestionsPane.setLayoutY(layoutY);
             suggest();
@@ -74,19 +75,35 @@ public class CodeSuggestionsManager {
 
         codeArea.sceneProperty().addListener((_, _, newScene) -> {
             if (newScene != null && codeSuggestionsPane == null) {
-                if (codeArea.getParent() instanceof Pane parent) {
-                    codeSuggestionsPane = new CodeSuggestionsPane(codeArea);
-                    codeArea.setCodeSuggestionsPane(codeSuggestionsPane);
-                    parent.getChildren().add(codeSuggestionsPane);
-                }
+                setupSuggestionsPane();
             }
         });
         codeCompletionListener();
     }
 
+    public void setupSuggestionsPane() {
+        Pane parent = null;
+        if (codeArea.getParent() instanceof Pane) {
+            parent = (Pane) codeArea.getParent();
+        } else if(codeArea.getParent().getParent() instanceof Pane) {
+            parent = (Pane) codeArea.getParent().getParent();
+        } else {
+            System.out.println("Could not find parent pane to make code suggestions pane");
+            return;
+        }
+        System.out.println("Made new code suggestions pane");
+        codeSuggestionsPane = new CodeSuggestionsPane(codeArea);
+        codeArea.setCodeSuggestionsPane(codeSuggestionsPane);
+        parent.getChildren().add(codeSuggestionsPane);
+    }
+
     private void codeCompletionListener() {
         codeArea.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
             bracketListener(event);
+            if(codeSuggestionsPane == null) {
+                System.out.println("Code suggestions pane is null");
+                return;
+            }
             if (codeSuggestionsPane.hasSuggestions()) {
                 boolean shouldConsume = true;
                 switch (event.getCode()) {

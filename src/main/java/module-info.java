@@ -3,6 +3,7 @@ module fili5rovic.jni_codeeditor.jni_codeeditor {
     requires javafx.fxml;
     requires org.fxmisc.richtext;
     requires java.compiler;
+    requires org.fxmisc.flowless;
 
 
     exports fili5rovic.jni_codeeditor.jni_codeeditor;
