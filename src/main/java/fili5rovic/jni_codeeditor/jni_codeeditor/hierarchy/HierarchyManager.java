@@ -108,7 +108,6 @@ public class HierarchyManager {
     private void makeMenuItemsForSelectedItem(TreeItem<String> selectedItem) {
         contextMenu.getItems().clear();
         File selectedFile = new File(getPathForTreeItem(selectedItem));
-        System.out.println(selectedFile.getAbsolutePath());
 
         MenuItem openInExplorerMenuItem = new MenuItem("Open in explorer");
         openInExplorerMenuItem.setOnAction(_ -> {
@@ -120,21 +119,30 @@ public class HierarchyManager {
         });
         contextMenu.getItems().add(openInExplorerMenuItem);
 
-        if (selectedFile.isFile()) {
+        if (selectedFile.isFile() && !selectedFile.getName().endsWith(".dll")) {
             MenuItem openItem = new MenuItem("Open");
             openItem.setOnAction(_ -> onDoubleClick(selectedItem));
             contextMenu.getItems().add(openItem);
-
+            String code = FileHelper.readFromFile(selectedFile);
             if (selectedItem.getValue().endsWith(".java")) {
-                String code = FileHelper.readFromFile(selectedFile);
                 if (code.matches("(?s).*\\bnative\\b.*") && selectedItem.getParent() != null) {
                     MenuItem generateHeaderItem = menuItemCreateCppFile(selectedFile);
+                    contextMenu.getItems().add(generateHeaderItem);
+                }
+            } else if (selectedItem.getValue().endsWith(".cpp")) {
+                if(code.matches("(?s).*\\bJNIEXPORT\\b.*")) {
+                    MenuItem generateHeaderItem = menuItemCreateDLL(selectedFile);
                     contextMenu.getItems().add(generateHeaderItem);
                 }
             }
         }
     }
 
+    /**
+     * Creates java header as well as cpp file
+     * @param file file to create header for
+     * @return MenuItem
+     */
     private MenuItem menuItemCreateCppFile(File file) {
         MenuItem jniMenuItem = new MenuItem("Create native methods");
         jniMenuItem.setOnAction(_ -> {
@@ -149,12 +157,32 @@ public class HierarchyManager {
         return jniMenuItem;
     }
 
+    private MenuItem menuItemCreateDLL(File file) {
+        MenuItem dllMenuItem = new MenuItem("Create DLL from file");
+        dllMenuItem.setOnAction(_ -> {
+            try {
+                ArrayList<String> fileStr = new ArrayList<>();
+                fileStr.add(file.getName().replace(".cpp", ""));
+                CommandLineUtil.createDLL(fileStr, file.getParentFile());
+                refresh();
+            } catch (IOException | InterruptedException e) {
+                System.out.println("ERROR");
+                throw new RuntimeException(e);
+            }
+        });
+        return dllMenuItem;
+    }
+
     private void onDoubleClick(TreeItem<String> selectedItem) {
         if (selectedItem.getParent() == null)
             return;
 
         File file = new File(getPathForTreeItem(selectedItem));
 
+        if(file.getName().endsWith(".dll") || file.getName().endsWith(".so")) {
+            System.out.println("Cannot open this type of file");
+            return;
+        }
         if (file.isDirectory())
             return;
         dc.addNewTabPane(file);

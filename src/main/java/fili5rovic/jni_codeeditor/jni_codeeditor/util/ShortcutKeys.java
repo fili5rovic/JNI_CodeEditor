@@ -6,5 +6,6 @@ import javafx.scene.input.KeyCombination;
 
 public class ShortcutKeys {
     public static final KeyCombination OPEN_PROJECT = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
+    public static final KeyCombination NEW_PROJECT = new KeyCodeCombination(KeyCode.T, KeyCombination.CONTROL_DOWN);
 
 }

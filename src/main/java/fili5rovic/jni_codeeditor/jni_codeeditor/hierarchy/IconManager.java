@@ -15,6 +15,7 @@ public class IconManager {
     private static final String ICON_H = ICONS_PATH + "h-file.png";
     private static final String ICON_TXT = ICONS_PATH + "txt.png";
     private static final String ICON_PNG = ICONS_PATH + "png-file.png";
+    private static final String ICON_DLL = ICONS_PATH + "dll-file.png";
 
 
     public static String getIconPathByFileExtension(File file) {
@@ -40,6 +41,8 @@ public class IconManager {
                 return ICON_TXT;
             case "png":
                 return ICON_PNG;
+            case "dll":
+                return ICON_DLL;
             default:
                 return ICON_FILE;
         }

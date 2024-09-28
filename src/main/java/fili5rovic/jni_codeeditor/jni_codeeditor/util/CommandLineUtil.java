@@ -49,16 +49,22 @@ public class CommandLineUtil {
         createSharedLibrary(cppFileNames, workingDirectory);
     }
 
-    public static void createJavaHeaderFile(String className, File workingDirectory) throws IOException, InterruptedException {
+    private static void createJavaHeaderFile(String className, File workingDirectory) throws IOException, InterruptedException {
         doCommand("javac -h . " + className, workingDirectory);
     }
 
-    public static void createObjectFile(String cppFileName, File workingDirectory) throws IOException, InterruptedException {
+    private static void createObjectFile(String cppFileName, File workingDirectory) throws IOException, InterruptedException {
         doCommand("g++ -c -I\"" + javaHome + "\\include\" -I\"" + javaHome + "\\include\\win32\" " + cppFileName + ".cpp -o " + cppFileName + ".o -m64", workingDirectory);
     }
 
-
-    public static void createSharedLibrary(ArrayList<String> cppFileNames, File workingDirectory) throws IOException, InterruptedException {
+    /**
+     * Creates a shared library from cpp files.
+     * @param cppFileNames The names of the cpp files without the extension
+     * @param workingDirectory The directory where the cpp files are located and where the shared library will be created
+     * @throws IOException If the file cannot be created
+     * @throws InterruptedException If the process is interrupted
+     */
+    private static void createSharedLibrary(ArrayList<String> cppFileNames, File workingDirectory) throws IOException, InterruptedException {
         StringBuilder command = new StringBuilder("g++ -I\"" + javaHome + "\\include\" -I\"" + javaHome + "\\include\\win32\" -shared -o native.dll -m64");
         for (String cppFileName : cppFileNames) {
             command.append(" ").append(cppFileName).append(".cpp");

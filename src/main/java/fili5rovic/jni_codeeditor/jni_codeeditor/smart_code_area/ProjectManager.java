@@ -17,6 +17,8 @@ public class ProjectManager {
     public void openProjectAction() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(Window.getWindowAt(Window.WINDOW_DASHBOARD).getStage());
+        if(selectedDirectory == null)
+            return;
 
         openProject(selectedDirectory.getAbsolutePath());
 

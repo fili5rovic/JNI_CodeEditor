@@ -1,0 +1,12 @@
+public class Main {
+
+    static {
+        System.loadLibrary("native");
+    }
+
+    public native void test();
+
+    public static void main(String[] args) {
+        new Main().test();
+    }
+}

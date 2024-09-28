@@ -8,11 +8,11 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.TabSmartCodeArea
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.FileHelper;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.ShortcutKeys;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
+import fili5rovic.jni_codeeditor.jni_codeeditor.window.WindowHelper;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 
 import java.io.File;
 import java.net.URL;
@@ -113,15 +113,24 @@ public class DashboardController extends ControllerBase {
 
     public void initShortcuts(Scene scene) {
         scene.getAccelerators().put(ShortcutKeys.OPEN_PROJECT, this::openProjectAction);
+        scene.getAccelerators().put(ShortcutKeys.NEW_PROJECT, this::newProjectAction);
     }
 
     @FXML
-    private void openProjectAction() {
+    public void openProjectAction() {
         projectManager.openProjectAction();
+    }
+
+    private void newProjectAction() {
+        WindowHelper.showWindow(Window.WINDOW_NEW_PROJECT);
     }
 
     public TreeView<String> getProjectHierarchy() {
         return projectHierarchy;
+    }
+
+    public ProjectManager getProjectManager() {
+        return projectManager;
     }
 
 

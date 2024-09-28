@@ -22,7 +22,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#openProjectAction" text="Open Project" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" text="New Template Project" />
             </items>
           </Menu>
         </menus>
@@ -50,7 +50,7 @@
                         <TabPane fx:id="mainTabPane" tabClosingPolicy="ALL_TABS" />
                         <Pane fx:id="paneBehindTabPane" prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <Label layoutX="300.0" layoutY="276.0" text="Open project" textFill="#8d8d8d">
+                              <Label layoutX="300.0" layoutY="299.0" text="Open project" textFill="#8c8c8c7a">
                                  <font>
                                     <Font size="25.0" />
                                  </font>
@@ -60,7 +60,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="469.0" layoutY="276.0" text="Ctrl+O" textFill="#6ba0c6">
+                              <Label layoutX="469.0" layoutY="299.0" text="Ctrl+O" textFill="#6ca0c47e">
                                  <font>
                                     <Font size="25.0" />
                                  </font>
@@ -68,6 +68,21 @@
                               <Label layoutX="366.0" layoutY="671.0" text="All rights reserved" textFill="#6b6b6b">
                                  <font>
                                     <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="239.0" layoutY="172.0" text="JNI Code Editor" textFill="#00000016">
+                                 <font>
+                                    <Font size="60.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="263.0" layoutY="345.0" text="Project template" textFill="#8c8c8c7a">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="471.0" layoutY="345.0" text="Ctrl+T" textFill="#6ca0c47e">
+                                 <font>
+                                    <Font size="25.0" />
                                  </font>
                               </Label>
                            </children>
