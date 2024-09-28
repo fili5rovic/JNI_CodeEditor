@@ -15,8 +15,13 @@ public class HierarchyManager {
     private final TreeView<String> hierarchy;
     private String rootProjectPath;
 
+    private int clickNum = 0;
+    private TreeItem<String> lastSelectedItem;
+
+
     public HierarchyManager(TreeView<String> hierarchy) {
         this.hierarchy = hierarchy;
+        addClickEventFilter();
     }
 
     public void setPath(String path) {
@@ -35,7 +40,6 @@ public class HierarchyManager {
     }
 
 
-
     private static TreeItem<String> createNode(File file) {
         TreeItem<String> treeItem = new TreeItem<>(file.getName());
         setupIcon(file, treeItem);
@@ -50,6 +54,31 @@ public class HierarchyManager {
 
     private static void setupIcon(File file, TreeItem<String> treeItem) {
         treeItem.setGraphic(new ImageView(IconManager.getIconPathByFileExtension(file)));
+    }
+
+    private void addClickEventFilter() {
+        hierarchy.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            TreeItem<String> selectedItem = hierarchy.getSelectionModel().getSelectedItem();
+            clickNum++;
+            if (selectedItem != null && selectedItem.equals(lastSelectedItem) && clickNum == 2) {
+                onDoubleClick(selectedItem);
+                clickNum = 0;
+            } else {
+                clickNum = 1;
+            }
+            lastSelectedItem = selectedItem;
+        });
+    }
+
+    private void onDoubleClick(TreeItem<String> selectedItem) {
+        String path = rootProjectPath + "\\";
+        TreeItem<String> item = selectedItem;
+        while (item.getParent() != null) {
+            path = item.getValue() + "\\" + path;
+            item = item.getParent();
+        }
+        File file = new File(rootProjectPath + "\\" + selectedItem.getValue());
+        System.out.println("Double clicked on: " + file.getAbsolutePath());
     }
 
     public String getRootPath() {
