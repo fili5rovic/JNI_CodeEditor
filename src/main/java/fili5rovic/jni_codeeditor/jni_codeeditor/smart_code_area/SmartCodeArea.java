@@ -17,11 +17,9 @@ public class SmartCodeArea extends CodeArea {
 
     static class HighLighter {
         private final Pattern PATTERN;
-        private Language language ;
 
         HighLighter(SmartCodeArea codeArea) {
-            this.language = codeArea.getLanguage();
-            String[] KEYWORDS = FileHelper.getKeywordsForLanguage(language);
+            String[] KEYWORDS = FileHelper.getKeywordsForLanguage(codeArea.getLanguage());
             String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
             String PAREN_PATTERN = "[()]";
             String BRACE_PATTERN = "[{}]";

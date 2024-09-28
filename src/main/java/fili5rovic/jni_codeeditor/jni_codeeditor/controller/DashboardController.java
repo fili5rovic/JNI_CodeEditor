@@ -25,16 +25,16 @@ public class DashboardController extends ControllerBase {
     @FXML
     private Button collapseProjectPaneBtn;
 
-    private DividerManager dividerManager;
     private ProjectManager projectManager;
+
 
     static class DividerManager {
         private double nextDividerPosition = 0.0;
         private double oldDividerPosition = 0.2;
         private double absoluteDividerPosition = 150;
 
-        private SplitPane splitPane;
-        private Button collapseBtn;
+        private final SplitPane splitPane;
+        private final Button collapseBtn;
 
         DividerManager(SplitPane splitPane, Button collapseBtn) {
             this.splitPane = splitPane;
@@ -66,19 +66,27 @@ public class DashboardController extends ControllerBase {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Window.getWindowAt(Window.WINDOW_DASHBOARD).setController(this);
         initManagers();
+        projectManager.openProject("D:\\FAKULTET\\CetvrtiSemestar\\POOP\\PoopJavaProjekatGithub\\DatabaseImplementationJava\\DatabaseImplementation\\src");
     }
 
     private void initManagers() {
-        dividerManager = new DividerManager(horizontalSplitPane, collapseProjectPaneBtn);
+        DividerManager dividerManager = new DividerManager(horizontalSplitPane, collapseProjectPaneBtn);
         projectManager = new ProjectManager(this);
     }
 
     public void addNewTabPane(File file) {
-        Language language = Language.CPP;
-        if(file.getName().endsWith(".java")) {
-            language = Language.JAVA;
+        for (Tab tab : mainTabPane.getTabs())
+            if (tab.getText().equals(file.getName())) {
+                mainTabPane.getSelectionModel().select(tab);
+                return;
+            }
+
+        Language language = Language.JAVA;
+        if (file.getName().endsWith(".cpp") || file.getName().endsWith(".h")) {
+            language = Language.CPP;
+        } else if (file.getName().endsWith(".css")) {
+            language = Language.CSS;
         }
-        System.out.println(language);
         SmartCodeArea smartCodeArea = new SmartCodeArea(language);
         smartCodeArea.replaceText(FileHelper.readFromFile(file));
         mainTabPane.getTabs().add(new TabSmartCodeArea(smartCodeArea, file.getName()));

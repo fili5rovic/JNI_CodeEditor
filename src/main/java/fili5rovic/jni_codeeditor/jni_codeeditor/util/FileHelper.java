@@ -39,6 +39,7 @@ public class FileHelper {
         switch (language) {
             case JAVA -> fileName = "java-keywords.txt";
             case CPP ->  fileName = "cpp-keywords.txt";
+            case CSS -> fileName = "css-keywords.txt";
         }
         String path = "/fili5rovic/jni_codeeditor/jni_codeeditor/keywords/" + fileName;
         InputStream inputStream = FileHelper.class.getResourceAsStream(path);

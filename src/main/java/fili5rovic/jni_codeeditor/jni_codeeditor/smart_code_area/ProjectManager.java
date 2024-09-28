@@ -18,9 +18,12 @@ public class ProjectManager {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(Window.getWindowAt(Window.WINDOW_DASHBOARD).getStage());
 
-        if (selectedDirectory != null)
-            hierarchyManager.setPath(selectedDirectory.getAbsolutePath());
+        openProject(selectedDirectory.getAbsolutePath());
 
+    }
+
+    public void openProject(String path) {
+        hierarchyManager.setPath(path);
     }
 
     public String getRootPath() {
