@@ -7,7 +7,6 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.TabSmartCodeArea
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 
 
 import java.net.URL;
@@ -17,8 +16,6 @@ public class DashboardController extends ControllerBase {
 
     @FXML
     private TreeView<String> projectHierarchy;
-
-
     @FXML
     private TabPane mainTabPane;
     @FXML
@@ -66,7 +63,7 @@ public class DashboardController extends ControllerBase {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Window.getWindowAt(Window.WINDOW_DASHBOARD).setController(this);
-        setupTabPane();
+        addNewTabPane("default");
         initManagers();
     }
 
@@ -75,8 +72,8 @@ public class DashboardController extends ControllerBase {
         projectManager = new ProjectManager(this);
     }
 
-    private void setupTabPane() {
-        mainTabPane.getTabs().add(new TabSmartCodeArea(new SmartCodeArea(Language.JAVA), "untitled"));
+    private void addNewTabPane(String name) {
+        mainTabPane.getTabs().add(new TabSmartCodeArea(new SmartCodeArea(Language.JAVA), name));
     }
 
     @FXML

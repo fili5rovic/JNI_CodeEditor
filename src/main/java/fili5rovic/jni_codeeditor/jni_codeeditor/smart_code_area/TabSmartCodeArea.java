@@ -4,7 +4,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 
 public class TabSmartCodeArea extends Tab {
-    private SmartCodeArea smartCodeArea;
+    private final SmartCodeArea smartCodeArea;
 
     public TabSmartCodeArea(SmartCodeArea smartCodeArea, String tabName) {
         this.smartCodeArea = smartCodeArea;
