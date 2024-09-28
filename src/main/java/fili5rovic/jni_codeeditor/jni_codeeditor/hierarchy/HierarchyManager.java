@@ -40,6 +40,10 @@ public class HierarchyManager {
         getFileSystemTree(path);
     }
 
+    public void refresh() {
+        getFileSystemTree(rootProjectPath);
+    }
+
     private void getFileSystemTree(String directoryPath) {
         File rootDir = new File(directoryPath);
         if(rootDir.listFiles().length > MAX_FILES) {
@@ -103,19 +107,32 @@ public class HierarchyManager {
         if(selectedItem.getValue().endsWith(".java")) {
             File file = new File(getPathForTreeItem(selectedItem));
             String code = FileHelper.readFromFile(file);
-            if(code.matches(".*\\bnative\\b.*")) {
-                MenuItem generateHeaderItem = new MenuItem("Generate Header File");
-                generateHeaderItem.setOnAction(_ -> {
-                    try {
-                        CommandLineUtil.createJavaHeaderFile(file.getName(), file.getParentFile());
-                    } catch (IOException | InterruptedException e) {
-                        System.out.println("ERROR");
-                        throw new RuntimeException(e);
-                    }
-                });
+            if(code.matches("(?s).*\\bnative\\b.*") && selectedItem.getParent() != null) {
+                System.out.println("Native methods found");
+                MenuItem generateHeaderItem = menuItemJNI(selectedItem, file);
                 contextMenu.getItems().add(generateHeaderItem);
+            } else {
+                System.out.println("No native methods found");
             }
         }
+    }
+
+    private MenuItem menuItemJNI(TreeItem<String> selectedItem, File file) {
+        MenuItem jniMenuItem = new MenuItem("Create native methods");
+        jniMenuItem.setOnAction(_ -> {
+            try {
+//                ArrayList<String> cppFiles = new ArrayList<>();
+//                for(TreeItem<String> child : selectedItem.getParent().getChildren()) {
+//                    if(child.getValue().endsWith(".cpp"))
+//                        cppFiles.add(getPathForTreeItem(child));
+//                }
+                CommandLineUtil.createCppFileFromJavaFile(file.getName(), file.getParentFile());
+            } catch (IOException | InterruptedException e) {
+                System.out.println("ERROR");
+                throw new RuntimeException(e);
+            }
+        });
+        return jniMenuItem;
     }
 
     private void onDoubleClick(TreeItem<String> selectedItem) {

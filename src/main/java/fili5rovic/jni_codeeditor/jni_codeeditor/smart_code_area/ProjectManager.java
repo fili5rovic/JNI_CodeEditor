@@ -26,4 +26,8 @@ public class ProjectManager {
         hierarchyManager.setPath(path);
     }
 
+    public void refreshProject() {
+        hierarchyManager.refresh();
+    }
+
 }

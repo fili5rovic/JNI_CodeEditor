@@ -34,6 +34,14 @@ public class FileHelper {
         return sb.toString();
     }
 
+    public static void writeToFile(File file, String content) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(content);
+        } catch (IOException e) {
+            System.out.println("Couldn't write to file");
+        }
+    }
+
     public static String[] getKeywordsForLanguage(Language language) {
         String fileName = "";
         switch (language) {
@@ -49,7 +57,6 @@ public class FileHelper {
             keywords[i] = keywords[i].trim();
         }
         return keywords;
-
     }
 
 
