@@ -95,9 +95,7 @@ public class CodeSuggestionsManager {
             Text text = new Text("Sample");
             text.setFont(new Font("monospace", codeArea.fontManager.getCurrentFontSize()));
 
-            double lineHeight = text.getBoundsInLocal().getHeight();
-            System.out.println("Line height: " + lineHeight);
-            System.out.println("Font size: " + codeArea.fontManager.getCurrentFontSize());
+//            double lineHeight = text.getBoundsInLocal().getHeight();
             double xOffset = 0;
 
             double layoutX = currentColumn * codeArea.fontManager.getCurrentFontWidth() + xOffset;
@@ -128,7 +126,6 @@ public class CodeSuggestionsManager {
             System.out.println("Could not find parent pane to make code suggestions pane");
             return;
         }
-        System.out.println("Made new code suggestions pane");
         codeSuggestionsPane = new CodeSuggestionsPane(codeArea);
         codeArea.setCodeSuggestionsPane(codeSuggestionsPane);
         parent.getChildren().add(codeSuggestionsPane);

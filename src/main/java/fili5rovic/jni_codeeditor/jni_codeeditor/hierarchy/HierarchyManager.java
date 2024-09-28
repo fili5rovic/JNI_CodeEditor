@@ -1,6 +1,8 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.hierarchy;
 
 import fili5rovic.jni_codeeditor.jni_codeeditor.controller.DashboardController;
+import fili5rovic.jni_codeeditor.jni_codeeditor.util.CommandLineUtil;
+import fili5rovic.jni_codeeditor.jni_codeeditor.util.FileHelper;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
@@ -10,6 +12,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class HierarchyManager {
@@ -95,24 +99,49 @@ public class HierarchyManager {
         MenuItem openItem = new MenuItem("Open");
         openItem.setOnAction(_ -> onDoubleClick(selectedItem));
         contextMenu.getItems().add(openItem);
+
+        if(selectedItem.getValue().endsWith(".java")) {
+            File file = new File(getPathForTreeItem(selectedItem));
+            String code = FileHelper.readFromFile(file);
+            if(code.matches(".*\\bnative\\b.*")) {
+                MenuItem generateHeaderItem = new MenuItem("Generate Header File");
+                generateHeaderItem.setOnAction(_ -> {
+                    try {
+                        CommandLineUtil.createJavaHeaderFile(file.getName(), file.getParentFile());
+                    } catch (IOException | InterruptedException e) {
+                        System.out.println("ERROR");
+                        throw new RuntimeException(e);
+                    }
+                });
+                contextMenu.getItems().add(generateHeaderItem);
+            }
+        }
     }
 
     private void onDoubleClick(TreeItem<String> selectedItem) {
         if(selectedItem.getParent() == null)
             return;
 
-        StringBuilder path = new StringBuilder(rootProjectPath + "\\");
-        TreeItem<String> item = selectedItem;
-        while (item.getParent() != null) {
-            if(item != selectedItem)
-                path.append(item.getValue()).append("\\");
-            item = item.getParent();
-        }
-        path.append(selectedItem.getValue());
-        File file = new File(path.toString());
+        File file = new File(getPathForTreeItem(selectedItem));
 
         if(file.isDirectory())
             return;
         dc.addNewTabPane(file);
+    }
+
+    private String getPathForTreeItem(TreeItem<String> item) {
+        StringBuilder path = new StringBuilder(rootProjectPath + "\\");
+        TreeItem<String> currentItem = item;
+        ArrayList<String> pathList = new ArrayList<>();
+        while (currentItem.getParent() != null) {
+            if(currentItem != item)
+                pathList.add(currentItem.getValue());
+            currentItem = currentItem.getParent();
+        }
+        for (int i = pathList.size() - 1; i >= 0; i--)
+            path.append(pathList.get(i)).append("\\");
+
+        path.append(item.getValue());
+        return path.toString();
     }
 }

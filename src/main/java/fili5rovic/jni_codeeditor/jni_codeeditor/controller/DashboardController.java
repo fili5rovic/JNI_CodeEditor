@@ -67,7 +67,7 @@ public class DashboardController extends ControllerBase {
         Window.getWindowAt(Window.WINDOW_DASHBOARD).setController(this);
         initManagers();
         initIcons();
-        projectManager.openProject("D:\\FAKULTET\\CetvrtiSemestar\\POOP\\PoopJavaProjekatGithub\\DatabaseImplementationJava\\DatabaseImplementation\\src");
+        projectManager.openProject("D:\\PROJECTS\\JavaCustomProjects\\JNI_Example_Project");
     }
 
     private void initManagers() {
