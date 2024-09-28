@@ -1,9 +1,12 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.hierarchy;
 
 import fili5rovic.jni_codeeditor.jni_codeeditor.controller.DashboardController;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import java.io.File;
@@ -20,11 +23,13 @@ public class HierarchyManager {
     private TreeItem<String> lastSelectedItem;
     private final DashboardController dc;
 
+    private final ContextMenu contextMenu = new ContextMenu();
+
 
     public HierarchyManager(DashboardController dc) {
         this.dc = dc;
         this.hierarchy = dc.getProjectHierarchy();
-        addClickEventFilter();
+        addClickEventFilters();
     }
 
     public void setPath(String path) {
@@ -45,6 +50,7 @@ public class HierarchyManager {
 
     private static TreeItem<String> createNode(File file) {
         TreeItem<String> treeItem = new TreeItem<>(file.getName());
+
         setupIcon(file, treeItem);
 
         if (file.isDirectory() && file.listFiles() != null) {
@@ -59,8 +65,12 @@ public class HierarchyManager {
         treeItem.setGraphic(new ImageView(IconManager.getIconPathByFileExtension(file)));
     }
 
-    private void addClickEventFilter() {
-        hierarchy.addEventFilter(MouseEvent.MOUSE_CLICKED, _ -> {
+    private void addClickEventFilters() {
+        hierarchy.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if(e.getButton() != MouseButton.PRIMARY)
+                return;
+
+            contextMenu.hide();
             TreeItem<String> selectedItem = hierarchy.getSelectionModel().getSelectedItem();
             clickNum++;
             if (selectedItem != null && selectedItem.equals(lastSelectedItem) && clickNum == 2) {
@@ -71,6 +81,21 @@ public class HierarchyManager {
             }
             lastSelectedItem = selectedItem;
         });
+        hierarchy.setOnContextMenuRequested(event -> {
+
+            TreeItem<String> selectedItem = hierarchy.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                contextMenu.show(hierarchy, event.getScreenX(), event.getScreenY());
+                makeMenuItemsForSelectedItem(selectedItem);
+            }
+        });
+    }
+
+    private void makeMenuItemsForSelectedItem(TreeItem<String> selectedItem) {
+        contextMenu.getItems().clear();
+        MenuItem openItem = new MenuItem("Open");
+        openItem.setOnAction(event -> onDoubleClick(selectedItem));
+        contextMenu.getItems().add(openItem);
     }
 
     private void onDoubleClick(TreeItem<String> selectedItem) {
@@ -87,7 +112,6 @@ public class HierarchyManager {
         path.append(selectedItem.getValue());
         File file = new File(path.toString());
 
-        System.out.println("Double clicked on: " + path);
         if(file.isDirectory())
             return;
         dc.addNewTabPane(file);
