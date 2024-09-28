@@ -42,7 +42,7 @@
                         <TreeView fx:id="projectHierarchy" layoutX="-1.0" prefHeight="748.0" prefWidth="948.0" />
                      </children>
                   </AnchorPane>
-                  <TabPane fx:id="mainTabPane" />
+                  <TabPane fx:id="mainTabPane" tabClosingPolicy="ALL_TABS" />
               </items>
             </SplitPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />

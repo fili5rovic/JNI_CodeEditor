@@ -11,13 +11,13 @@ import java.util.ArrayList;
 
 public class CodeSuggestionsManager {
 
-    private int tabSize = 4;
+    private final int tabSize = 4;
 
     private String lastWord = "";
     private int paragraphIndex = 0;
 
     private CodeSuggestionsPane codeSuggestionsPane;
-    private SmartCodeArea codeArea;
+    private final SmartCodeArea codeArea;
 
     CodeSuggestionsManager(SmartCodeArea codeArea) {
         this.codeArea = codeArea;
@@ -51,7 +51,7 @@ public class CodeSuggestionsManager {
     }
 
     private void listeners() {
-        codeArea.caretPositionProperty().addListener(e -> {
+        codeArea.caretPositionProperty().addListener(_ -> {
             paragraphIndex = codeArea.getCurrentParagraph();
             int currentColumn = codeArea.getParagraph(paragraphIndex).length();
 
@@ -66,6 +66,7 @@ public class CodeSuggestionsManager {
 
 //            System.out.println("Layout Y " + layoutY);
 //            System.out.println("Paragraph index: " + paragraphIndex);
+            if(codeSuggestionsPane == null) return;
             codeSuggestionsPane.setLayoutX(layoutX);
             codeSuggestionsPane.setLayoutY(layoutY);
             suggest();
@@ -115,7 +116,7 @@ public class CodeSuggestionsManager {
             codeArea.moveTo(codeArea.getCaretPosition() - 1);
         } else if (e.getCode() == KeyCode.BACK_SPACE) {
             int caretPosition = codeArea.getCaretPosition();
-            String bracketCheck = "";
+            String bracketCheck;
             try {
                 bracketCheck = codeArea.getText(caretPosition - 1, caretPosition + 1);
             } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {

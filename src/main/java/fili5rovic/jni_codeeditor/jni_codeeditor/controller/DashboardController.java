@@ -4,11 +4,13 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.Language;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.SmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.TabSmartCodeArea;
+import fili5rovic.jni_codeeditor.jni_codeeditor.util.FileHelper;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -63,7 +65,6 @@ public class DashboardController extends ControllerBase {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Window.getWindowAt(Window.WINDOW_DASHBOARD).setController(this);
-        addNewTabPane("default");
         initManagers();
     }
 
@@ -72,8 +73,14 @@ public class DashboardController extends ControllerBase {
         projectManager = new ProjectManager(this);
     }
 
-    private void addNewTabPane(String name) {
-        mainTabPane.getTabs().add(new TabSmartCodeArea(new SmartCodeArea(Language.JAVA), name));
+    public void addNewTabPane(File file) {
+        Language language = Language.CPP;
+        if(file.getName().endsWith(".java")) {
+            language = Language.JAVA;
+        }
+        SmartCodeArea smartCodeArea = new SmartCodeArea(language);
+        smartCodeArea.replaceText(FileHelper.readFromFile(file));
+        mainTabPane.getTabs().add(new TabSmartCodeArea(smartCodeArea, file.getName()));
     }
 
     @FXML

@@ -1,5 +1,6 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.hierarchy;
 
+import fili5rovic.jni_codeeditor.jni_codeeditor.controller.DashboardController;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
@@ -17,10 +18,12 @@ public class HierarchyManager {
 
     private int clickNum = 0;
     private TreeItem<String> lastSelectedItem;
+    private final DashboardController dc;
 
 
-    public HierarchyManager(TreeView<String> hierarchy) {
-        this.hierarchy = hierarchy;
+    public HierarchyManager(DashboardController dc) {
+        this.dc = dc;
+        this.hierarchy = dc.getProjectHierarchy();
         addClickEventFilter();
     }
 
@@ -57,7 +60,7 @@ public class HierarchyManager {
     }
 
     private void addClickEventFilter() {
-        hierarchy.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+        hierarchy.addEventFilter(MouseEvent.MOUSE_CLICKED, _ -> {
             TreeItem<String> selectedItem = hierarchy.getSelectionModel().getSelectedItem();
             clickNum++;
             if (selectedItem != null && selectedItem.equals(lastSelectedItem) && clickNum == 2) {
@@ -71,14 +74,23 @@ public class HierarchyManager {
     }
 
     private void onDoubleClick(TreeItem<String> selectedItem) {
-        String path = rootProjectPath + "\\";
+        if(selectedItem.getParent() == null)
+            return;
+
+        StringBuilder path = new StringBuilder(rootProjectPath + "\\");
         TreeItem<String> item = selectedItem;
         while (item.getParent() != null) {
-            path = item.getValue() + "\\" + path;
+            if(item != selectedItem)
+                path.append(item.getValue()).append("\\");
             item = item.getParent();
         }
-        File file = new File(rootProjectPath + "\\" + selectedItem.getValue());
-        System.out.println("Double clicked on: " + file.getAbsolutePath());
+        path.append(selectedItem.getValue());
+        File file = new File(path.toString());
+
+        System.out.println("Double clicked on: " + path);
+        if(file.isDirectory())
+            return;
+        dc.addNewTabPane(file);
     }
 
     public String getRootPath() {

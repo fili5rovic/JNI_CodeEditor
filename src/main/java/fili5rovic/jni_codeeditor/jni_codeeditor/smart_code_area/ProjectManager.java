@@ -8,10 +8,10 @@ import javafx.stage.DirectoryChooser;
 import java.io.File;
 
 public class ProjectManager {
-    private HierarchyManager hierarchyManager;
+    private final HierarchyManager hierarchyManager;
 
     public ProjectManager(DashboardController dc) {
-        this.hierarchyManager = new HierarchyManager(dc.getProjectHierarchy());
+        this.hierarchyManager = new HierarchyManager(dc);
     }
 
     public void openProjectAction() {
