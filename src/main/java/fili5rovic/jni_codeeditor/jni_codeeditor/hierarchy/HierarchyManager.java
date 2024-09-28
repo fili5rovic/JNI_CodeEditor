@@ -46,7 +46,7 @@ public class HierarchyManager {
 
     private void getFileSystemTree(String directoryPath) {
         File rootDir = new File(directoryPath);
-        if(rootDir.listFiles().length > MAX_FILES) {
+        if (rootDir.listFiles().length > MAX_FILES) {
             System.out.println("Too many files in the directory");
             return;
         }
@@ -75,13 +75,13 @@ public class HierarchyManager {
 
     private void addClickEventFilters() {
         hierarchy.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-            if(e.getButton() != MouseButton.PRIMARY) {
-                if(e.getButton() == MouseButton.SECONDARY)
+            if (e.getButton() != MouseButton.PRIMARY) {
+                if (e.getButton() == MouseButton.SECONDARY)
                     contextMenuRequest(e.getScreenX(), e.getScreenY());
                 return;
             }
 
-            if(contextMenu.isShowing())
+            if (contextMenu.isShowing())
                 contextMenu.hide();
             contextMenu.getItems().clear();
             TreeItem<String> selectedItem = hierarchy.getSelectionModel().getSelectedItem();
@@ -107,19 +107,36 @@ public class HierarchyManager {
 
     private void makeMenuItemsForSelectedItem(TreeItem<String> selectedItem) {
         contextMenu.getItems().clear();
-        MenuItem openItem = new MenuItem("Open");
-        openItem.setOnAction(_ -> onDoubleClick(selectedItem));
-        contextMenu.getItems().add(openItem);
+        File selectedFile = new File(getPathForTreeItem(selectedItem));
+        System.out.println(selectedFile.getAbsolutePath());
 
-        if(selectedItem.getValue().endsWith(".java")) {
-            File javaFile = new File(getPathForTreeItem(selectedItem));
-            String code = FileHelper.readFromFile(javaFile);
-            if(code.matches("(?s).*\\bnative\\b.*") && selectedItem.getParent() != null) {
-                MenuItem generateHeaderItem = menuItemCreateCppFile(javaFile);
-                contextMenu.getItems().add(generateHeaderItem);
+        MenuItem openInExplorerMenuItem = new MenuItem("Open in explorer");
+        openInExplorerMenuItem.setOnAction(_ -> {
+            try {
+                Runtime.getRuntime().exec("explorer.exe /select," + selectedFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } else if(selectedItem.getValue().endsWith(".cpp")) {
+        });
+        contextMenu.getItems().add(openInExplorerMenuItem);
+
+        if (selectedFile.isFile()) {
+            MenuItem openItem = new MenuItem("Open");
+            openItem.setOnAction(_ -> onDoubleClick(selectedItem));
+            contextMenu.getItems().add(openItem);
+
+            if (selectedItem.getValue().endsWith(".java")) {
+                String code = FileHelper.readFromFile(selectedFile);
+                if (code.matches("(?s).*\\bnative\\b.*") && selectedItem.getParent() != null) {
+                    MenuItem generateHeaderItem = menuItemCreateCppFile(selectedFile);
+                    contextMenu.getItems().add(generateHeaderItem);
+                }
+            }
+        } else {
+
         }
+
+
     }
 
     private MenuItem menuItemCreateCppFile(File file) {
@@ -137,22 +154,24 @@ public class HierarchyManager {
     }
 
     private void onDoubleClick(TreeItem<String> selectedItem) {
-        if(selectedItem.getParent() == null)
+        if (selectedItem.getParent() == null)
             return;
 
         File file = new File(getPathForTreeItem(selectedItem));
 
-        if(file.isDirectory())
+        if (file.isDirectory())
             return;
         dc.addNewTabPane(file);
     }
 
     private String getPathForTreeItem(TreeItem<String> item) {
         StringBuilder path = new StringBuilder(rootProjectPath + "\\");
+        if(item.getParent() == null)
+            return path.toString();
         TreeItem<String> currentItem = item;
         ArrayList<String> pathList = new ArrayList<>();
         while (currentItem.getParent() != null) {
-            if(currentItem != item)
+            if (currentItem != item)
                 pathList.add(currentItem.getValue());
             currentItem = currentItem.getParent();
         }

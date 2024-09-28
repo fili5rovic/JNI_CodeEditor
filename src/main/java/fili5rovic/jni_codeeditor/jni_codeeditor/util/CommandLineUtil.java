@@ -143,7 +143,7 @@ public class CommandLineUtil {
             extension = "." + extension;
 
         String finalExtension = extension;
-        File[] files = workingDirectory.listFiles((dir, name) -> name.endsWith(finalExtension));
+        File[] files = workingDirectory.listFiles((_, name) -> name.endsWith(finalExtension));
 
         if (files == null || files.length == 0) {
             System.out.println("No files (*" + extension + ") found in the working directory.");

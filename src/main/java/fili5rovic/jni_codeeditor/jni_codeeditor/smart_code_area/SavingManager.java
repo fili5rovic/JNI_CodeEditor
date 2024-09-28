@@ -17,14 +17,16 @@ public class SavingManager {
 
     private void listeners() {
         codeArea.focusedProperty().addListener((_, _, isFocused) -> {
-            if(!isFocused && hasUnsavedChanges) {
+            if (!isFocused && hasUnsavedChanges) {
                 FileHelper.writeToFile(file, codeArea.getText());
                 System.out.println("Wrote to file.");
                 hasUnsavedChanges = false;
             }
         });
-        codeArea.textProperty().addListener((_, a, b) -> {
-            hasUnsavedChanges = !a.equals(b);
+        codeArea.textProperty().addListener((_, _, _) -> {
+            if (codeArea.getScene() != null) {
+                hasUnsavedChanges = true;
+            }
         });
     }
 }
