@@ -76,13 +76,9 @@ public class SmartCodeArea extends CodeArea {
     private Language language = Language.JAVA;
 
 
-    public SmartCodeArea() {
-        init();
-    }
-
     public SmartCodeArea(Language language) {
-        this();
         setLanguage(language);
+        init();
     }
 
     private void init() {

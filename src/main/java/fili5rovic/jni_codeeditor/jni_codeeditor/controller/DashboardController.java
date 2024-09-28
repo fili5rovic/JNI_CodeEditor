@@ -78,6 +78,7 @@ public class DashboardController extends ControllerBase {
         if(file.getName().endsWith(".java")) {
             language = Language.JAVA;
         }
+        System.out.println(language);
         SmartCodeArea smartCodeArea = new SmartCodeArea(language);
         smartCodeArea.replaceText(FileHelper.readFromFile(file));
         mainTabPane.getTabs().add(new TabSmartCodeArea(smartCodeArea, file.getName()));
