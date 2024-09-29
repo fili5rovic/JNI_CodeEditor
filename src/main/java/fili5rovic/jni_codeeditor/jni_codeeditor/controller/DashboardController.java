@@ -60,12 +60,8 @@ public class DashboardController extends ControllerBase {
         }
 
         private void initListeners() {
-            splitPane.widthProperty().addListener((_, _, newValue) -> {
-                splitPane.setDividerPositions(absoluteDividerPosition / newValue.doubleValue());
-            });
-            splitPane.getDividers().getFirst().positionProperty().addListener((_, _, newValue) -> {
-                absoluteDividerPosition = newValue.doubleValue() * splitPane.getWidth();
-            });
+            splitPane.widthProperty().addListener((_, _, newValue) -> splitPane.setDividerPositions(absoluteDividerPosition / newValue.doubleValue()));
+            splitPane.getDividers().getFirst().positionProperty().addListener((_, _, newValue) -> absoluteDividerPosition = newValue.doubleValue() * splitPane.getWidth());
             collapseBtn.setOnAction(_ -> collapseProjectPaneBtnClicked());
         }
 
