@@ -121,6 +121,7 @@ public class DashboardController extends ControllerBase {
         projectManager.openProjectAction();
     }
 
+    @FXML
     private void newProjectAction() {
         WindowHelper.showWindow(Window.WINDOW_NEW_PROJECT);
     }

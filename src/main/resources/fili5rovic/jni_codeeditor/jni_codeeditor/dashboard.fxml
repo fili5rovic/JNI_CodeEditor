@@ -22,7 +22,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#openProjectAction" text="Open Project" />
-                  <MenuItem mnemonicParsing="false" text="New Template Project" />
+                  <MenuItem mnemonicParsing="false" onAction="#newProjectAction" text="New Template Project" />
             </items>
           </Menu>
         </menus>

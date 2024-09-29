@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 public class DashboardWindow extends Window {
 
     static String resource = "/fili5rovic/jni_codeeditor/jni_codeeditor/dashboard.fxml";
-    static String css = "/fili5rovic/jni_codeeditor/jni_codeeditor/stylesheets/styles.css";
+    static String css = "/fili5rovic/jni_codeeditor/jni_codeeditor/stylesheets/dashboard.css";
     static String title = "Dashboard";
 
     @Override

@@ -29,7 +29,6 @@ public class HierarchyManager {
 
     private final ContextMenu contextMenu = new ContextMenu();
 
-
     public HierarchyManager(DashboardController dc) {
         this.dc = dc;
         this.hierarchy = dc.getProjectHierarchy();
@@ -46,11 +45,16 @@ public class HierarchyManager {
 
     private void getFileSystemTree(String directoryPath) {
         File rootDir = new File(directoryPath);
+        if(rootDir.listFiles() == null) {
+            System.out.println("Invalid directory");
+            return;
+        }
         if (rootDir.listFiles().length > MAX_FILES) {
             System.out.println("Too many files in the directory");
             return;
         }
         TreeItem<String> rootItem = createNode(rootDir);
+        rootItem.setExpanded(true);
         hierarchy.setRoot(rootItem);
         this.rootProjectPath = directoryPath;
     }

@@ -72,7 +72,7 @@ public class SmartCodeArea extends CodeArea {
 
     private CodeSuggestionsPane codeSuggestionsPane = null;
 
-    private Language language = Language.JAVA;
+    private Language language;
     private final File file;
 
 
@@ -85,7 +85,7 @@ public class SmartCodeArea extends CodeArea {
     private void init() {
         setLineHighlighterOn(true);
         setLineHighlighterFill(Paint.valueOf("#d0e1f9"));
-        setWrapText(true);
+//        setWrapText(true);
         this.getStyleClass().add("smart-code-area");
         setParagraphGraphicFactory(LineNumberFactory.get(this));
 

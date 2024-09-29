@@ -42,6 +42,26 @@ public class FileHelper {
         }
     }
 
+    /**
+     * Deletes a directory and all of its contents
+     * @param directory The directory to delete
+     */
+    public static void deleteDirectory(File directory) {
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        deleteDirectory(file);
+                    } else {
+                        file.delete();
+                    }
+                }
+            }
+            directory.delete();
+        }
+    }
+
     public static String[] getKeywordsForLanguage(Language language) {
         String fileName = "";
         switch (language) {
