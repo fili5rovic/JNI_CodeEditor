@@ -29,6 +29,11 @@
                         <MenuItem mnemonicParsing="false" onAction="#newProjectAction" text="New Template Project" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Project">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#refreshAction" text="Refresh Project" />
+                     </items>
+                  </Menu>
               </menus>
             </MenuBar>
             <Button fx:id="runBtn" layoutX="1042.0" layoutY="2.0" mnemonicParsing="false" onAction="#runCodeAction" prefWidth="57.0" text="Run">

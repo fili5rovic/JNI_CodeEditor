@@ -30,6 +30,9 @@ public class ProjectManager {
     public void openProject(String path) {
         hierarchyManager.setPath(path);
     }
+    public void refreshProject() {
+        hierarchyManager.refresh();
+    }
 
     public static String getProjectPath() {
         return projectPath;

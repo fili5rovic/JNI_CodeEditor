@@ -1,16 +1,46 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 
+import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
+
 import javax.tools.*;
 import java.io.*;
 import java.util.Collections;
-
+/**
+ * Manages the compilation and execution of Java code in an isolated environment.
+ */
 public class JavaCodeManager {
 
     private static String outputDirectoryPath = ".jnice/isolated-classes";
     private static String libraryPath = "D:\\PROJECTS\\JavaCustomProjects\\JNI_Example_Project\\native";
 
     /**
+     * Compiles and runs the code using the specified configuration.
+     *
+     * @param selectedItem The configuration to use
+     */
+    public static void runCodeUsingConfig(RunConfigItem selectedItem) {
+        if (selectedItem == null) {
+            return;
+        }
+        FileHelper.findAllFilesInDirectoryByExtension(new File(ProjectManager.getSourcesRootPath()), ".java");
+        File[] files = FileHelper.findAllFilesInDirectoryByExtension(new File(ProjectManager.getSourcesRootPath()), ".java");
+        String[] fileNames = new String[files.length];
+        for (int i = 0; i < files.length; i++) {
+            fileNames[i] = files[i].getAbsolutePath();
+        }
+        setLibraryPath(selectedItem.getLibraryPath());
+        try {
+            compileAndRun(fileNames, selectedItem.getMainClassName());
+        } catch (IOException e) {
+            System.out.println("[COMPILE_ERROR] Compilation error caught!");
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    /**
      * Compiles and runs the specified source files in an isolated environment.
+     *
      * @param sourceFiles Paths to the source files to compile
      * @throws IOException If an I/O error occurs
      */
@@ -47,6 +77,7 @@ public class JavaCodeManager {
 
     /**
      * Runs the compiled code in a separate Java process.
+     *
      * @param outputDirectory The directory containing the compiled classes
      * @throws Exception If an error occurs while running the code
      */

@@ -1,7 +1,11 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 
 
+import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import javafx.scene.control.MenuItem;
+
+import java.io.File;
+import java.io.IOException;
 
 public class RunConfigItem extends MenuItem {
     private final String libraryPath;
@@ -23,14 +27,16 @@ public class RunConfigItem extends MenuItem {
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        if (!(other instanceof RunConfigItem))
+        if (!(other instanceof RunConfigItem item))
             return false;
 
-        RunConfigItem item = (RunConfigItem) other;
         return this.getText().equals(item.getText()) &&
                 this.libraryPath.equals(item.libraryPath) &&
                 this.mainClassName.equals(item.mainClassName);
     }
+
+
+
 
     public String fileOutput() {
         return String.format("%s,%s,%s", getText(), libraryPath, mainClassName);

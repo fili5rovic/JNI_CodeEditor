@@ -29,6 +29,8 @@ public class HierarchyManager {
 
     private final ContextMenu contextMenu = new ContextMenu();
 
+    private final ArrayList<String> previouslyExpanded = new ArrayList<>();
+
     public HierarchyManager(DashboardController dc) {
         this.dc = dc;
         this.hierarchy = dc.getProjectHierarchy();
@@ -40,6 +42,7 @@ public class HierarchyManager {
     }
 
     public void refresh() {
+        printExpanded();
         if(ProjectManager.getProjectPath() != null)
             getFileSystemTree(ProjectManager.getProjectPath());
     }
@@ -61,7 +64,7 @@ public class HierarchyManager {
     }
 
 
-    private static TreeItem<String> createNode(File file) {
+    private TreeItem<String> createNode(File file) {
         TreeItem<String> treeItem = new TreeItem<>(file.getName());
 
         setupIcon(file, treeItem);
@@ -71,6 +74,8 @@ public class HierarchyManager {
                 treeItem.getChildren().add(createNode(child));
             }
         }
+        if(previouslyExpanded.contains(treeItem.getValue()))
+            treeItem.setExpanded(true);
         return treeItem;
     }
 
@@ -209,5 +214,20 @@ public class HierarchyManager {
 
         path.append(item.getValue());
         return path.toString();
+    }
+
+
+    private void printExpanded() {
+        previouslyExpanded.clear();
+        printExpandedRecursive(hierarchy.getRoot());
+        System.out.println(previouslyExpanded);
+    }
+
+    private void printExpandedRecursive(TreeItem<String> item) {
+        if(!item.getChildren().isEmpty() && item.isExpanded())
+            previouslyExpanded.add(item.getValue());
+        for(TreeItem<String> child : item.getChildren()) {
+            printExpandedRecursive(child);
+        }
     }
 }

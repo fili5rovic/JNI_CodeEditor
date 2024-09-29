@@ -11,6 +11,7 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.util.RunConfigItem;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.ShortcutKeys;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.WindowHelper;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -19,7 +20,6 @@ import javafx.scene.layout.Pane;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class DashboardController extends ControllerBase {
@@ -40,6 +40,8 @@ public class DashboardController extends ControllerBase {
     private Button runBtn;
 
     private ProjectManager projectManager;
+
+
 
 
     static class DividerManager {
@@ -149,31 +151,16 @@ public class DashboardController extends ControllerBase {
 
     @FXML
     private void runCodeAction() {
-        System.out.println(runConfig.selectionModelProperty().get());
-        RunConfigItem selectedItem = runConfig.getSelectionModel().getSelectedItem();
-        if (selectedItem == null ) {
-            System.out.println("No config selected");
-            return;
-        }
-        FileHelper.findAllFilesInDirectoryByExtension(new File(ProjectManager.getSourcesRootPath()), ".java");
-        File[] files = FileHelper.findAllFilesInDirectoryByExtension(new File(ProjectManager.getSourcesRootPath()), ".java");
-
-        String[] fileNames = new String[files.length];
-        for (int i = 0; i < files.length; i++) {
-            fileNames[i] = files[i].getAbsolutePath();
-        }
-        try {
-            JavaCodeManager.setLibraryPath(selectedItem.getLibraryPath());
-            JavaCodeManager.compileAndRun(fileNames, selectedItem.getMainClassName());
-        } catch (IOException e) {
-            System.out.println("[COMPILE_ERROR] Compilation error caught!");
-            throw new RuntimeException(e);
-        }
+        JavaCodeManager.runCodeUsingConfig(runConfig.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     private void newProjectAction() {
         WindowHelper.showWindow(Window.WINDOW_NEW_PROJECT);
+    }
+    @FXML
+    private void refreshAction() {
+        projectManager.refreshProject();
     }
 
     public TreeView<String> getProjectHierarchy() {
