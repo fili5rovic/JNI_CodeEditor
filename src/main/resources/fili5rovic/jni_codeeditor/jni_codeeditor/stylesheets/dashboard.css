@@ -96,6 +96,35 @@
 .scroll-bar:vertical .increment-arrow {
     -fx-shape: ""; /* Remove arrow shapes */
 }
+/*endregion*/
 
+
+/*region ChoiceBox*/
+.choice-box {
+    -fx-background-color: #ffffff; /* Light background */
+    -fx-text-fill: #333333; /* Dark text color */
+    -fx-border-color: #cccccc; /* Light border color */
+    -fx-border-radius: 5; /* Rounded corners */
+    -fx-border-width: 1; /* Border width */
+}
+
+.choice-box .list-view {
+    -fx-background-color: #ffffff; /* Background of the dropdown */
+    -fx-text-fill: #333333; /* Dark text color in dropdown */
+    -fx-highlight-fill: #0078d7; /* Highlight color */
+    -fx-highlight-text-fill: white; /* Highlighted text color */
+}
+
+.choice-box .arrow {
+    -fx-background-color: transparent; /* Remove background of the arrow */
+}
+
+.choice-box:hover {
+    -fx-border-color: #909293; /* Change border color on hover */
+}
+
+.choice-box .list-view .list-cell:hover {
+    -fx-background-color: #e8e8e8; /* Light hover effect for list items */
+}
 
 /*endregion*/

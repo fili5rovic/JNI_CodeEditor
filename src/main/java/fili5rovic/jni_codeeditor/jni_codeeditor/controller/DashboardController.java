@@ -6,6 +6,7 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.SmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.TabSmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.FileHelper;
+import fili5rovic.jni_codeeditor.jni_codeeditor.util.RunConfigItem;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.ShortcutKeys;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.WindowHelper;
@@ -30,6 +31,8 @@ public class DashboardController extends ControllerBase {
     private SplitPane horizontalSplitPane;
     @FXML
     private Button collapseProjectPaneBtn;
+    @FXML
+    private ChoiceBox<RunConfigItem> runConfig;
 
     private ProjectManager projectManager;
 
@@ -72,7 +75,13 @@ public class DashboardController extends ControllerBase {
         Window.getWindowAt(Window.WINDOW_DASHBOARD).setController(this);
         initManagers();
         initIcons();
+        initRunConfigs();
         projectManager.openProject("D:\\PROJECTS\\JavaCustomProjects\\JNI_Example_Project");
+    }
+
+    private void initRunConfigs() {
+        runConfig.getItems().add(new RunConfigItem("Run","", ""));
+        runConfig.getItems().add(new RunConfigItem("Add","",""));
     }
 
     private void initManagers() {
@@ -114,6 +123,11 @@ public class DashboardController extends ControllerBase {
     public void initShortcuts(Scene scene) {
         scene.getAccelerators().put(ShortcutKeys.OPEN_PROJECT, this::openProjectAction);
         scene.getAccelerators().put(ShortcutKeys.NEW_PROJECT, this::newProjectAction);
+    }
+
+    @FXML
+    private void runCodeAction() {
+        System.out.println(runConfig.selectionModelProperty().get());
     }
 
     @FXML

@@ -2,17 +2,18 @@ package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 
 import javax.tools.*;
 import java.io.*;
-import java.lang.reflect.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Collections;
 
-public class CompileAndRunMultiple {
+public class JavaCodeManager {
 
     private static String outputDirectoryPath = ".jnice/isolated-classes";
     private static String libraryPath = "D:\\PROJECTS\\JavaCustomProjects\\JNI_Example_Project\\native";
 
+    /**
+     * Compiles and runs the specified source files in an isolated environment.
+     * @param sourceFiles Paths to the source files to compile
+     * @throws IOException If an I/O error occurs
+     */
     public static void compileAndRun(String[] sourceFiles) throws IOException {
         cleanOutputDirectory();
         // Obtain system Java compiler (JDK needs to be installed)
@@ -44,7 +45,11 @@ public class CompileAndRunMultiple {
     }
 
 
-
+    /**
+     * Runs the compiled code in a separate Java process.
+     * @param outputDirectory The directory containing the compiled classes
+     * @throws Exception If an error occurs while running the code
+     */
     private static void runCompiledCode(File outputDirectory) throws Exception {
         // Start a new Java process with the specified library path
         ProcessBuilder processBuilder = new ProcessBuilder("java", "-Djava.library.path=" + libraryPath, "-cp", outputDirectory.getPath(), "fili5rovic.jni_codeeditor.Main");
@@ -55,7 +60,9 @@ public class CompileAndRunMultiple {
     }
 
 
-
+    /**
+     * Deletes the output directory and creates a new one.
+     */
     private static void cleanOutputDirectory() {
         File outputDirectory = new File(".jnice/isolated-classes");
         FileHelper.deleteDirectory(new File(outputDirectoryPath));
@@ -75,10 +82,10 @@ public class CompileAndRunMultiple {
     }
 
     public static void setLibraryPath(String libraryPath) {
-        CompileAndRunMultiple.libraryPath = libraryPath;
+        JavaCodeManager.libraryPath = libraryPath;
     }
 
     public static void setOutputDirectoryPath(String outputDirectoryPath) {
-        CompileAndRunMultiple.outputDirectoryPath = outputDirectoryPath;
+        JavaCodeManager.outputDirectoryPath = outputDirectoryPath;
     }
 }
