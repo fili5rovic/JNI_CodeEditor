@@ -80,7 +80,7 @@ public class HierarchyManager {
     }
 
     private static void setupIcon(File file, TreeItem<String> treeItem) {
-        treeItem.setGraphic(new ImageView(IconManager.getIconPathByFileExtension(file)));
+        treeItem.setGraphic(IconManager.getImageViewByFileExtension(file));
     }
 
     private void addClickEventFilters() {

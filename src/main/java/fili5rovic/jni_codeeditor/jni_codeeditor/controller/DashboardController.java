@@ -1,5 +1,6 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.controller;
 
+import fili5rovic.jni_codeeditor.jni_codeeditor.hierarchy.Icon;
 import fili5rovic.jni_codeeditor.jni_codeeditor.hierarchy.IconManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.Language;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
@@ -14,6 +15,7 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.window.WindowHelper;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
@@ -88,7 +90,6 @@ public class DashboardController extends ControllerBase {
 
     private void initRunConfigs() {
         RunConfigItem addConfigItem = new RunConfigItem("Add", "", "");
-        addConfigItem.setGraphic(IconManager.getPlusIcon());
         runConfig.getItems().add(addConfigItem);
 
         runConfig.getSelectionModel().selectedItemProperty().addListener((_, _, selectedItem) -> {
@@ -125,6 +126,7 @@ public class DashboardController extends ControllerBase {
         SmartCodeArea smartCodeArea = new SmartCodeArea(language, file);
         smartCodeArea.replaceText(FileHelper.readFromFile(file));
         TabSmartCodeArea tabSmartCodeArea = new TabSmartCodeArea(smartCodeArea, file.getName(), this);
+        tabSmartCodeArea.setGraphic(IconManager.getImageViewByFileExtension(file));
         tabSmartCodeArea.setOnClosed(_ -> {
             if (mainTabPane.getTabs().isEmpty())
                 paneBehindTabPane.setVisible(true);
@@ -147,8 +149,8 @@ public class DashboardController extends ControllerBase {
 
     private void initIcons() {
         collapseProjectPaneBtn.setGraphic(IconManager.getCollapseIcon());
-        refreshDLLBtn.setGraphic(IconManager.getRefreshIcon());
-        runBtn.setGraphic(IconManager.getRunIcon());
+        refreshDLLBtn.setGraphic(IconManager.getIcon(Icon.REFRESH));
+        runBtn.setGraphic(IconManager.getIcon(Icon.RUN));
     }
 
     @FXML

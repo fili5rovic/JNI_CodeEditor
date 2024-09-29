@@ -129,6 +129,142 @@
 
 /*endregion*/
 
+
+/*region MenuBar*/
+.menu-bar {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 5px;
+}
+
+/* Stil za Menu */
+.menu {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 5;
+    -fx-padding: 5px;
+}
+
+.menu:hover {
+    -fx-background-color: #d1f7ff;
+    -fx-cursor: HAND;
+}
+
+.menu .label {
+    -fx-text-fill: #1a1a1a;
+    -fx-alignment: CENTER;
+    -fx-padding: 0 10 0 10;
+}
+
+.menu-item {
+    -fx-text-fill: #c54e4e;
+    -fx-background-color: #f5f5f5;
+}
+.menu-item:hover {
+    -fx-background-color: #d5f9ff;
+    -fx-cursor: HAND;
+    cursor: HAND;
+}
+
+.menu-item:pressed {
+    -fx-background-color: #c0c0c0;
+    background-color: #c0c0c0;
+    -fx-cursor: HAND;
+    cursor: HAND;
+}
+
+.menu-item .label {
+    -fx-text-fill: #1a1a1a;
+    -fx-alignment: CENTER;
+    /*-fx-padding: 0 10 0 10;*/
+}
+/*endregion*/
+
+
+
+/*region Tab Pane*/
+.tab-header-area .tab-header-background {
+    -fx-background-color: #f4f4f4;
+}
+
+.tab-pane {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #e8e7e7;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #dedede;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #383838;
+    -fx-padding: 0 10 0 10;
+}
+
+/*.tab-pane:top *.tab-header-area {*/
+/*    -fx-padding: 0 0 0 30;*/
+
+/*    !* NO SPACE LEFT OF FIRST TAB *!*/
+/*    !* -fx-padding: 0 0 0 30; *!*/
+/*}*/
+
+
+
+
+
+.tab-pane:focused .tab-header-area .headers-region .tab:selected .focus-indicator {
+    -fx-border-width: 0;
+    -fx-border-insets: 0 0 0 0;
+    -fx-border-radius: 0;
+}
+/*endregion*/
+
+
+/*region Button*/
+.button {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-insets: 0 0 -1 0;
+    -fx-border-width: 1;
+    border-width: 1;
+    -fx-border-color: #d0d0d0;
+    border-color: #d0d0d0;
+    -fx-background-color: #f5f5f5;
+    background-color: #f5f5f5;
+    -fx-text-fill: #000;
+    -fx-min-height: 25;
+    min-height: 25;
+    /*-fx-pref-height: 25;*/
+}
+
+.button:focused {
+    -fx-border-color: #c0c0c0;
+    border-color: #c0c0c0;
+    -fx-background-color: #f5f5f5;
+    background-color: #f5f5f5;
+}
+
+.button:hover {
+    -fx-border-color: #d0d0d0;
+    border-color: #d0d0d0;
+    -fx-background-color: #e0e0e0;
+    background-color: #e0e0e0;
+    -fx-cursor: HAND;
+    cursor: HAND;
+}
+
+.button:pressed {
+    -fx-border-color: #c0c0c0;
+    border-color: #c0c0c0;
+    -fx-background-color: #c0c0c0;
+    background-color: #c0c0c0;
+    -fx-cursor: HAND;
+    cursor: HAND;
+}
+/*endregion*/
+
 .separator-menu-item {
     -fx-max-height: 3px;
     -fx-background-color: #f5f5f5;

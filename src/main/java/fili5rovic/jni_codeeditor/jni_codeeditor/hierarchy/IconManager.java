@@ -16,53 +16,52 @@ public class IconManager {
     private static final String ICON_TXT = ICONS_PATH + "txt.png";
     private static final String ICON_PNG = ICONS_PATH + "png-file.png";
     private static final String ICON_DLL = ICONS_PATH + "dll-file.png";
-    private static final String ICON_PLUS = ICONS_PATH + "plus.png";                        //todo not used
+    private static final String ICON_PLUS = ICONS_PATH + "plus.png";
     private static final String ICON_REFRESH = ICONS_PATH + "refresh.png";
     private static final String ICON_RUN = ICONS_PATH + "run.png";
 
 
-
-    public static String getIconPathByFileExtension(File file) {
+    public static ImageView getImageViewByFileExtension(File file) {
         if (file.isDirectory()) {
-            if(file.listFiles() == null || file.listFiles().length == 0) {
-                return ICON_FOLDER_EMPTY;
+            if (file.listFiles() == null || file.listFiles().length == 0) {
+                return new ImageView(ICON_FOLDER_EMPTY);
             }
-            return ICON_FOLDER;
+            return new ImageView(ICON_FOLDER);
         }
 
         String fileName = file.getName();
         String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-        switch (extension) {
-            case "java":
-                return ICON_JAVA;
-            case "h":
-            case "hpp":
-                return ICON_H;
-            case "c":
-            case "cpp":
-                return ICON_C;
-            case "txt":
-                return ICON_TXT;
-            case "png":
-                return ICON_PNG;
-            case "dll":
-                return ICON_DLL;
-            default:
-                return ICON_FILE;
-        }
+        String path = switch (extension) {
+            case "java" -> ICON_JAVA;
+            case "h", "hpp" -> ICON_H;
+            case "c", "cpp" -> ICON_C;
+            case "txt" -> ICON_TXT;
+            case "png" -> ICON_PNG;
+            case "dll" -> ICON_DLL;
+            default -> ICON_FILE;
+        };
+        return new ImageView(path);
     }
 
+    public static ImageView getIcon(Icon icon) {
+        return switch (icon) {
+            case FOLDER -> new ImageView(ICON_FOLDER);
+            case FOLDER_EMPTY -> new ImageView(ICON_FOLDER_EMPTY);
+            case FILE -> new ImageView(ICON_FILE);
+            case JAVA -> new ImageView(ICON_JAVA);
+            case C -> new ImageView(ICON_C);
+            case H -> new ImageView(ICON_H);
+            case TXT -> new ImageView(ICON_TXT);
+            case PNG -> new ImageView(ICON_PNG);
+            case DLL -> new ImageView(ICON_DLL);
+            case PLUS -> new ImageView(ICON_PLUS);
+            case REFRESH -> new ImageView(ICON_REFRESH);
+            case RUN -> new ImageView(ICON_RUN);
+        };
+    }
 
     public static ImageView getCollapseIcon() {
         return new ImageView(ICONS_PATH + "light-theme/collapse.png");
     }
-    public static ImageView getPlusIcon() {
-        return new ImageView(ICON_PLUS);
-    }
-    public static ImageView getRefreshIcon() {
-        return new ImageView(ICON_REFRESH);
-    }
-    public static ImageView getRunIcon() {
-        return new ImageView(ICON_RUN);
-    }
+
 }
