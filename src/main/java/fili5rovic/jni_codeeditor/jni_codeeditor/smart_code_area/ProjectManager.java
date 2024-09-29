@@ -11,6 +11,7 @@ public class ProjectManager {
     private final HierarchyManager hierarchyManager;
 
     private static String projectPath;
+    private static String sourcesRootPath;
 
     public ProjectManager(DashboardController dc) {
         this.hierarchyManager = new HierarchyManager(dc);
@@ -36,6 +37,16 @@ public class ProjectManager {
 
     public static void setProjectPath(String projectPath) {
         ProjectManager.projectPath = projectPath;
+        if(sourcesRootPath == null)
+            sourcesRootPath = projectPath;
+    }
+
+    public static void setSourcesRootPath(String sourcesRootPath) {
+        ProjectManager.sourcesRootPath = sourcesRootPath;
+    }
+
+    public static String getSourcesRootPath() {
+        return sourcesRootPath;
     }
 
 }

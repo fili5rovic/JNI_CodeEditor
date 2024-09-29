@@ -16,6 +16,7 @@ public class IconManager {
     private static final String ICON_TXT = ICONS_PATH + "txt.png";
     private static final String ICON_PNG = ICONS_PATH + "png-file.png";
     private static final String ICON_DLL = ICONS_PATH + "dll-file.png";
+    private static final String ICON_PLUS = ICONS_PATH + "plus.png";
 
 
     public static String getIconPathByFileExtension(File file) {
@@ -51,5 +52,8 @@ public class IconManager {
 
     public static ImageView getCollapseIcon() {
         return new ImageView(ICONS_PATH + "light-theme/collapse.png");
+    }
+    public static ImageView getPlusIcon() {
+        return new ImageView(ICON_PLUS);
     }
 }

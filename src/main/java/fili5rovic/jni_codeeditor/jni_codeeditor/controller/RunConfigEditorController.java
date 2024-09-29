@@ -3,6 +3,7 @@ package fili5rovic.jni_codeeditor.jni_codeeditor.controller;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.RunConfigItem;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
+import fili5rovic.jni_codeeditor.jni_codeeditor.window.WindowHelper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -40,7 +41,7 @@ public class RunConfigEditorController extends ControllerBase {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setInitialDirectory(new File(ProjectManager.getProjectPath()));
             File selectedDirectory = directoryChooser.showDialog(stage);
-            if(selectedDirectory == null) {
+            if (selectedDirectory == null) {
                 createBtn.setDisable(true);
                 return;
             }
@@ -50,9 +51,10 @@ public class RunConfigEditorController extends ControllerBase {
         mainClassTextField.setOnMouseClicked(_ -> {
             Stage stage = Window.getWindowAt(Window.WINDOW_RUN_CONFIG_EDITOR).getStage();
             FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Java files", "*.java"));            fileChooser.setInitialDirectory(new File(ProjectManager.getProjectPath()));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Java files", "*.java"));
+            fileChooser.setInitialDirectory(new File(ProjectManager.getProjectPath()));
             File selectedFile = fileChooser.showOpenDialog(stage);
-            if(selectedFile == null) {
+            if (selectedFile == null) {
                 createBtn.setDisable(true);
                 return;
             }
@@ -60,12 +62,13 @@ public class RunConfigEditorController extends ControllerBase {
             updateButton();
         });
 
-//        Window.getWindowAt(Window.WINDOW_RUN_CONFIG_EDITOR).getStage().setOnShown(_->{
-//            mainClassTextField.clear();
-//            libraryPathTextField.clear();
-//            createBtn.setDisable(true);
-//        });
+    }
 
+    @Override
+    public void onShow() {
+        mainClassTextField.clear();
+        libraryPathTextField.clear();
+        createBtn.setDisable(true);
     }
 
     private void updateButton() {
@@ -77,12 +80,13 @@ public class RunConfigEditorController extends ControllerBase {
         ChoiceBox<RunConfigItem> runConfig = dashboardController.getRunConfig();
         String name = mainClassTextField.getText().split("\\.")[0];
         name = name.substring(name.lastIndexOf("\\") + 1);
-        RunConfigItem newItem = new RunConfigItem(name,libraryPathTextField.getText(), mainClassTextField.getText());
-        if(runConfig.getItems().contains(newItem)) {
+        RunConfigItem newItem = new RunConfigItem(name, libraryPathTextField.getText(), mainClassTextField.getText());
+        if (runConfig.getItems().contains(newItem)) {
             System.out.println("Config already exists");
             return;
         }
         runConfig.getItems().addFirst(newItem);
         runConfig.getSelectionModel().selectFirst();
+        WindowHelper.hideWindow(Window.WINDOW_RUN_CONFIG_EDITOR);
     }
 }

@@ -3,6 +3,7 @@ package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.Language;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class FileHelper {
 
@@ -58,7 +59,40 @@ public class FileHelper {
                     }
                 }
             }
-            directory.delete();
+            directory.delete();        }
+    }
+
+    public static File[] findAllFilesInDirectoryByExtension(File dir, String extension) {
+        // Validate the directory
+        if (!dir.isDirectory()) {
+            throw new IllegalArgumentException("Provided path is not a directory: " + dir.getAbsolutePath());
+        }
+
+        // List to hold the found files
+        ArrayList<File> filesWithExtension = new ArrayList<>();
+
+        // Call the recursive method
+        findFilesRecursive(dir, extension, filesWithExtension);
+
+        // Convert the list to an array and return
+        return filesWithExtension.toArray(new File[0]);
+    }
+
+    private static void findFilesRecursive(File dir, String extension, ArrayList<File> fileList) {
+        // Get all files and directories in the current directory
+        File[] files = dir.listFiles();
+        if (files == null) {
+            return; // If the directory is empty or an I/O error occurs
+        }
+
+        for (File file : files) {
+            if (file.isDirectory() && !file.getName().startsWith(".")) {
+                // Recursively search in the subdirectory
+                findFilesRecursive(file, extension, fileList);
+            } else if (file.isFile() && file.getName().endsWith(extension)) {
+                // If it's a file with the correct extension, add it to the list
+                fileList.add(file);
+            }
         }
     }
 
@@ -78,6 +112,7 @@ public class FileHelper {
         }
         return keywords;
     }
+
 
 
 }

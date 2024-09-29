@@ -1,16 +1,18 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 
+
 import javafx.scene.control.MenuItem;
 
 public class RunConfigItem extends MenuItem {
-    private final String mainClassPath;
+    private final String libraryPath;
     private final String mainClassName;
 
 
-    public RunConfigItem(String name, String mainClassPath, String mainClassName) {
+    public RunConfigItem(String name, String libraryPath, String mainClassName) {
         super(name);
-        this.mainClassPath = mainClassPath;
+        this.libraryPath = libraryPath;
         this.mainClassName = mainClassName;
+        System.out.println("RunConfigItem: " + name + " " + libraryPath + " " + mainClassName);
     }
 
     @Override
@@ -21,15 +23,24 @@ public class RunConfigItem extends MenuItem {
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        if (other == null) return false;
-        if (other instanceof RunConfigItem item) {
-            return this.getText().equals(item.getText()) &&
-                    this.mainClassPath.equals(item.mainClassPath) &&
-                    this.mainClassName.equals(item.mainClassName);
-        } else return false;
+        if (!(other instanceof RunConfigItem))
+            return false;
+
+        RunConfigItem item = (RunConfigItem) other;
+        return this.getText().equals(item.getText()) &&
+                this.libraryPath.equals(item.libraryPath) &&
+                this.mainClassName.equals(item.mainClassName);
     }
 
     public String fileOutput() {
-        return String.format("%s,%s,%s", getText(), mainClassPath, mainClassName);
+        return String.format("%s,%s,%s", getText(), libraryPath, mainClassName);
+    }
+
+    public String getLibraryPath() {
+        return libraryPath;
+    }
+
+    public String getMainClassName() {
+        return mainClassName;
     }
 }

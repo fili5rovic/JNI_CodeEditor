@@ -6,6 +6,7 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.SmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.TabSmartCodeArea;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.FileHelper;
+import fili5rovic.jni_codeeditor.jni_codeeditor.util.JavaCodeManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.RunConfigItem;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.ShortcutKeys;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
@@ -16,7 +17,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class DashboardController extends ControllerBase {
@@ -83,12 +86,13 @@ public class DashboardController extends ControllerBase {
 
     private void initRunConfigs() {
         RunConfigItem addConfigItem = new RunConfigItem("Add", "", "");
+        addConfigItem.setGraphic(IconManager.getPlusIcon());
         runConfig.getItems().add(addConfigItem);
 
-        runConfig.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
-            if(newValue == null)
+        runConfig.getSelectionModel().selectedItemProperty().addListener((_, _, selectedItem) -> {
+            if(selectedItem == null)
                 return;
-            if (newValue.equals(addConfigItem)) {
+            if (selectedItem.equals(addConfigItem)) {
                 WindowHelper.showWindow(Window.WINDOW_RUN_CONFIG_EDITOR);
                 runConfig.getSelectionModel().clearSelection();
                 runBtn.setDisable(true);
@@ -146,6 +150,25 @@ public class DashboardController extends ControllerBase {
     @FXML
     private void runCodeAction() {
         System.out.println(runConfig.selectionModelProperty().get());
+        RunConfigItem selectedItem = runConfig.getSelectionModel().getSelectedItem();
+        if (selectedItem == null ) {
+            System.out.println("No config selected");
+            return;
+        }
+        FileHelper.findAllFilesInDirectoryByExtension(new File(ProjectManager.getSourcesRootPath()), ".java");
+        File[] files = FileHelper.findAllFilesInDirectoryByExtension(new File(ProjectManager.getSourcesRootPath()), ".java");
+
+        String[] fileNames = new String[files.length];
+        for (int i = 0; i < files.length; i++) {
+            fileNames[i] = files[i].getAbsolutePath();
+        }
+        try {
+            JavaCodeManager.setLibraryPath(selectedItem.getLibraryPath());
+            JavaCodeManager.compileAndRun(fileNames, selectedItem.getMainClassName());
+        } catch (IOException e) {
+            System.out.println("[COMPILE_ERROR] Compilation error caught!");
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

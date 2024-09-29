@@ -14,7 +14,7 @@ public class JavaCodeManager {
      * @param sourceFiles Paths to the source files to compile
      * @throws IOException If an I/O error occurs
      */
-    public static void compileAndRun(String[] sourceFiles) throws IOException {
+    public static void compileAndRun(String[] sourceFiles, String mainClassPath) throws IOException {
         cleanOutputDirectory();
         // Obtain system Java compiler (JDK needs to be installed)
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -38,7 +38,7 @@ public class JavaCodeManager {
         }
 
         try {
-            runCompiledCode(outputDirectory);
+            runCompiledCode(outputDirectory, mainClassPath);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -50,9 +50,9 @@ public class JavaCodeManager {
      * @param outputDirectory The directory containing the compiled classes
      * @throws Exception If an error occurs while running the code
      */
-    private static void runCompiledCode(File outputDirectory) throws Exception {
+    private static void runCompiledCode(File outputDirectory, String mainClassPath) throws Exception {
         // Start a new Java process with the specified library path
-        ProcessBuilder processBuilder = new ProcessBuilder("java", "-Djava.library.path=" + libraryPath, "-cp", outputDirectory.getPath(), "fili5rovic.jni_codeeditor.Main");
+        ProcessBuilder processBuilder = new ProcessBuilder("java", "-Djava.library.path=" + libraryPath, "-cp", outputDirectory.getPath(), mainClassPath);
         processBuilder.inheritIO(); // Redirect output to the console
         Process process = processBuilder.start();
         int exitCode = process.waitFor(); // Wait for the process to finish
@@ -76,9 +76,7 @@ public class JavaCodeManager {
         String[] sourceFilesStrings = new String[]{
                 "D:\\PROJECTS\\JavaCustomProjects\\JNI_Example_Project\\src\\main\\java\\fili5rovic\\jni_codeeditor\\Main.java",
         };
-
-
-        compileAndRun(sourceFilesStrings);
+        compileAndRun(sourceFilesStrings, "fili5rovic.jni_codeeditor.Main");
     }
 
     public static void setLibraryPath(String libraryPath) {
