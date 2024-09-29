@@ -9,9 +9,10 @@ import javafx.stage.Stage;
 public abstract class Window {
     protected Stage stage;
     protected ControllerBase controller;
-    public static final int WINDOWS = 2;
+    public static final int WINDOWS = 3;
     public static final int WINDOW_DASHBOARD = 0;
     public static final int WINDOW_NEW_PROJECT = 1;
+    public static final int WINDOW_RUN_CONFIG_EDITOR = 2;
     private final static Window[] windows = new Window[WINDOWS];
 
     public static void setWindowAt(int position, Window w) {

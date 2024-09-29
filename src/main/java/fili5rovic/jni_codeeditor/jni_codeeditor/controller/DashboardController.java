@@ -33,6 +33,8 @@ public class DashboardController extends ControllerBase {
     private Button collapseProjectPaneBtn;
     @FXML
     private ChoiceBox<RunConfigItem> runConfig;
+    @FXML
+    private Button runBtn;
 
     private ProjectManager projectManager;
 
@@ -80,8 +82,20 @@ public class DashboardController extends ControllerBase {
     }
 
     private void initRunConfigs() {
-        runConfig.getItems().add(new RunConfigItem("Run","", ""));
-        runConfig.getItems().add(new RunConfigItem("Add","",""));
+        RunConfigItem addConfigItem = new RunConfigItem("Add", "", "");
+        runConfig.getItems().add(addConfigItem);
+
+        runConfig.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> {
+            if(newValue == null)
+                return;
+            if (newValue.equals(addConfigItem)) {
+                WindowHelper.showWindow(Window.WINDOW_RUN_CONFIG_EDITOR);
+                runConfig.getSelectionModel().clearSelection();
+                runBtn.setDisable(true);
+            } else {
+                runBtn.setDisable(false);
+            }
+        });
     }
 
     private void initManagers() {
@@ -115,24 +129,23 @@ public class DashboardController extends ControllerBase {
             paneBehindTabPane.setVisible(false);
     }
 
-
-    private void initIcons() {
-        collapseProjectPaneBtn.setGraphic(IconManager.getCollapseIcon());
-    }
-
     public void initShortcuts(Scene scene) {
         scene.getAccelerators().put(ShortcutKeys.OPEN_PROJECT, this::openProjectAction);
         scene.getAccelerators().put(ShortcutKeys.NEW_PROJECT, this::newProjectAction);
     }
 
     @FXML
-    private void runCodeAction() {
-        System.out.println(runConfig.selectionModelProperty().get());
+    public void openProjectAction() {
+        projectManager.openProjectAction();
+    }
+
+    private void initIcons() {
+        collapseProjectPaneBtn.setGraphic(IconManager.getCollapseIcon());
     }
 
     @FXML
-    public void openProjectAction() {
-        projectManager.openProjectAction();
+    private void runCodeAction() {
+        System.out.println(runConfig.selectionModelProperty().get());
     }
 
     @FXML
@@ -146,6 +159,10 @@ public class DashboardController extends ControllerBase {
 
     public ProjectManager getProjectManager() {
         return projectManager;
+    }
+
+    public ChoiceBox<RunConfigItem> getRunConfig() {
+        return runConfig;
     }
 
 

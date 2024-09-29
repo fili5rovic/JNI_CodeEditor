@@ -10,6 +10,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         Window.setWindowAt(Window.WINDOW_DASHBOARD, new DashboardWindow());
         Window.setWindowAt(Window.WINDOW_NEW_PROJECT, new NewProjectWindow());
+        Window.setWindowAt(Window.WINDOW_RUN_CONFIG_EDITOR, new RunConfigEditorWindow());
 
         Window.initAllWindows();
         WindowHelper.showOnly(Window.WINDOW_DASHBOARD);

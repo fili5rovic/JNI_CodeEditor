@@ -31,7 +31,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Button layoutX="1042.0" layoutY="2.0" mnemonicParsing="false" onAction="#runCodeAction" prefWidth="57.0" text="Run">
+            <Button fx:id="runBtn" layoutX="1042.0" layoutY="2.0" mnemonicParsing="false" onAction="#runCodeAction" prefWidth="57.0" text="Run">
                <font>
                   <Font size="10.0" />
                </font>

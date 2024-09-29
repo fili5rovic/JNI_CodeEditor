@@ -10,6 +10,8 @@ import java.io.File;
 public class ProjectManager {
     private final HierarchyManager hierarchyManager;
 
+    private static String projectPath;
+
     public ProjectManager(DashboardController dc) {
         this.hierarchyManager = new HierarchyManager(dc);
     }
@@ -26,6 +28,14 @@ public class ProjectManager {
 
     public void openProject(String path) {
         hierarchyManager.setPath(path);
+    }
+
+    public static String getProjectPath() {
+        return projectPath;
+    }
+
+    public static void setProjectPath(String projectPath) {
+        ProjectManager.projectPath = projectPath;
     }
 
 }

@@ -1,6 +1,7 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.hierarchy;
 
 import fili5rovic.jni_codeeditor.jni_codeeditor.controller.DashboardController;
+import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.CommandLineUtil;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.FileHelper;
 import javafx.scene.control.ContextMenu;
@@ -21,7 +22,6 @@ public class HierarchyManager {
     private static final int MAX_FILES = 100;
 
     private final TreeView<String> hierarchy;
-    private String rootProjectPath;
 
     private int clickNum = 0;
     private TreeItem<String> lastSelectedItem;
@@ -40,7 +40,8 @@ public class HierarchyManager {
     }
 
     public void refresh() {
-        getFileSystemTree(rootProjectPath);
+        if(ProjectManager.getProjectPath() != null)
+            getFileSystemTree(ProjectManager.getProjectPath());
     }
 
     private void getFileSystemTree(String directoryPath) {
@@ -56,7 +57,7 @@ public class HierarchyManager {
         TreeItem<String> rootItem = createNode(rootDir);
         rootItem.setExpanded(true);
         hierarchy.setRoot(rootItem);
-        this.rootProjectPath = directoryPath;
+        ProjectManager.setProjectPath(directoryPath);
     }
 
 
@@ -193,7 +194,7 @@ public class HierarchyManager {
     }
 
     private String getPathForTreeItem(TreeItem<String> item) {
-        StringBuilder path = new StringBuilder(rootProjectPath + "\\");
+        StringBuilder path = new StringBuilder(ProjectManager.getProjectPath() + "\\");
         if(item.getParent() == null)
             return path.toString();
         TreeItem<String> currentItem = item;

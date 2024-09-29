@@ -128,3 +128,10 @@
 }
 
 /*endregion*/
+
+.separator-menu-item {
+    -fx-max-height: 3px;
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+}
