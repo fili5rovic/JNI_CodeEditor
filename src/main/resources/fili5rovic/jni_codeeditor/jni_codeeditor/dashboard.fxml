@@ -36,7 +36,7 @@
                   </Menu>
               </menus>
             </MenuBar>
-            <Button fx:id="runBtn" layoutX="1042.0" layoutY="2.0" mnemonicParsing="false" onAction="#runCodeAction" prefWidth="57.0" text="Run">
+            <Button fx:id="runBtn" layoutX="1048.0" layoutY="2.0" mnemonicParsing="false" onAction="#runCodeAction" text="Run" AnchorPane.leftAnchor="1048.0">
                <font>
                   <Font size="10.0" />
                </font>
@@ -46,6 +46,11 @@
                   <Insets top="-3.0" />
                </padding>
             </ChoiceBox>
+            <Button fx:id="refreshDLLBtn" layoutX="929.0" layoutY="2.0" mnemonicParsing="false" text="DLL" AnchorPane.rightAnchor="179.0">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </top>
@@ -108,6 +113,7 @@
                               </Label>
                            </children>
                         </Pane>
+                        <Pane pickOnBounds="false" prefHeight="200.0" prefWidth="200.0" />
                      </children>
                   </StackPane>
               </items>

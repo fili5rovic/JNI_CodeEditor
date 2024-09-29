@@ -11,14 +11,12 @@ import fili5rovic.jni_codeeditor.jni_codeeditor.util.RunConfigItem;
 import fili5rovic.jni_codeeditor.jni_codeeditor.util.ShortcutKeys;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.Window;
 import fili5rovic.jni_codeeditor.jni_codeeditor.window.WindowHelper;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -38,6 +36,8 @@ public class DashboardController extends ControllerBase {
     private ChoiceBox<RunConfigItem> runConfig;
     @FXML
     private Button runBtn;
+    @FXML
+    private Button refreshDLLBtn;
 
     private ProjectManager projectManager;
 
@@ -147,6 +147,8 @@ public class DashboardController extends ControllerBase {
 
     private void initIcons() {
         collapseProjectPaneBtn.setGraphic(IconManager.getCollapseIcon());
+        refreshDLLBtn.setGraphic(IconManager.getRefreshIcon());
+        runBtn.setGraphic(IconManager.getRunIcon());
     }
 
     @FXML

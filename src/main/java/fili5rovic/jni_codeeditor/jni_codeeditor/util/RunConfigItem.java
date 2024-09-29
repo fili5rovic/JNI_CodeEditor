@@ -1,11 +1,8 @@
 package fili5rovic.jni_codeeditor.jni_codeeditor.util;
 
 
-import fili5rovic.jni_codeeditor.jni_codeeditor.smart_code_area.ProjectManager;
 import javafx.scene.control.MenuItem;
 
-import java.io.File;
-import java.io.IOException;
 
 public class RunConfigItem extends MenuItem {
     private final String libraryPath;

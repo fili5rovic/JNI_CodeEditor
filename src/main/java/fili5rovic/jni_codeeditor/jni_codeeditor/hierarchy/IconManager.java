@@ -16,7 +16,10 @@ public class IconManager {
     private static final String ICON_TXT = ICONS_PATH + "txt.png";
     private static final String ICON_PNG = ICONS_PATH + "png-file.png";
     private static final String ICON_DLL = ICONS_PATH + "dll-file.png";
-    private static final String ICON_PLUS = ICONS_PATH + "plus.png";
+    private static final String ICON_PLUS = ICONS_PATH + "plus.png";                        //todo not used
+    private static final String ICON_REFRESH = ICONS_PATH + "refresh.png";
+    private static final String ICON_RUN = ICONS_PATH + "run.png";
+
 
 
     public static String getIconPathByFileExtension(File file) {
@@ -55,5 +58,11 @@ public class IconManager {
     }
     public static ImageView getPlusIcon() {
         return new ImageView(ICON_PLUS);
+    }
+    public static ImageView getRefreshIcon() {
+        return new ImageView(ICON_REFRESH);
+    }
+    public static ImageView getRunIcon() {
+        return new ImageView(ICON_RUN);
     }
 }
